@@ -29,7 +29,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			for ($j=0; $j < $size; $j++) {
 				echo "<div class=\"col\">";
 
-				if (($i == 0) and ($j == 0)) echo "<div class=\"user\" style=\"background-image: url(/assets/img/me_pic.jpg);\" title=\"gficher\"></div>";
+				if (($i == 0) and ($j == 0)) echo "<div class=\"user\" style=\"background-image: url(/assets/img/me_pic.jpg); border-color: yellow;\" title=\"gficher\"></div>";
 				if (($i == 4) and ($j == 9)) echo "<div class=\"user\" style=\"background-image: url(/assets/img/bagatini.jpg);\" title=\"Bagatini\"></div>";
 				if (($i == 7) and ($j == 19)) echo "<div class=\"user\" style=\"background-image: url(/assets/img/priscila.jpg);\" title=\"Priscila\"></div>";
 				if (($i == 18) and ($j == 13)) echo "<div class=\"user\" style=\"background-image: url(/assets/img/giovanna.jpg);\" title=\"Giovanna\"></div>";
