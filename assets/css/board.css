@@ -40,7 +40,7 @@ body {
 }
 
 .board > .row > .col.range {
-    background: #959595;
+    background: #8f8f8f;
 }
 
 .board > .row > .col > .move-arrow {
@@ -49,7 +49,7 @@ body {
     margin: auto;
     line-height: 40px;
     text-align: center;
-    opacity: .3;
+    opacity: .1;
     transition: .1s;
     font-size: 15px;
 }
@@ -64,6 +64,7 @@ body {
 }
 
 .board > .row > .col > .player {
+    position: relative;
     height: 100%;
     width: 100%;
     overflow: auto;
@@ -98,6 +99,33 @@ body {
     border-radius: 100%;
     box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
     background: #0097b1;
+
+    cursor: default;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
+}
+
+.board > .row > .col > .player > .lives {
+    position: relative;
+    float: right;
+    width: 15px;
+    height: 15px;
+    line-height: 15px;
+    overflow: visible;
+
+    margin-top: 3px;
+    margin-right: 3px;
+
+    font-size: 10px;
+    text-align: center;
+
+    border-radius: 100%;
+    box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
+    background: #b10000;
 
     cursor: default;
     -webkit-touch-callout: none; /* iOS Safari */
