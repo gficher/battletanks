@@ -18,9 +18,10 @@ body {
 }
 
 .board {
-    width: 840px;
-    height: 840px;
+    width: 882px;
+    height: 882px;
     border: 3px solid #bababa;
+    border-style: outset;
     margin: auto;
     margin-bottom: 30px;
     margin-top: 30px;
@@ -40,7 +41,15 @@ body {
 }
 
 .board > .row > .col.range {
-    background: #8f8f8f;
+    background: #9a9797;
+}
+
+.board > .row > .col.coord {
+    line-height: 40px;
+    text-align: center;
+    font-weight: bold;
+    color: #000;
+    background: #717171;
 }
 
 .board > .row > .col > .move-arrow {
@@ -49,7 +58,7 @@ body {
     margin: auto;
     line-height: 40px;
     text-align: center;
-    opacity: .1;
+    opacity: .2;
     transition: .1s;
     font-size: 15px;
 }
@@ -82,8 +91,12 @@ body {
     border: 1px solid transparent;
 }
 
-.board > .row > .col > .player > .power {
-    position: relative;
+.board > .row > .col > .player  > .status {
+    width: 100%;
+    position: absolute;
+}
+
+.board > .row > .col > .player  > .status > .power {
     float: right;
     width: 15px;
     height: 15px;
@@ -109,8 +122,7 @@ body {
     user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
 }
 
-.board > .row > .col > .player > .lives {
-    position: relative;
+.board > .row > .col > .player > .status > .lives {
     float: right;
     width: 15px;
     height: 15px;
@@ -136,12 +148,17 @@ body {
     user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
 }
 
-.board > .row > .col > .player > .bomb {
+.board > .row > .col > .player > .actions {
+    width: 100%;
     position: absolute;
+    margin-top: -10px;
+}
+
+.board > .row > .col > .player > .actions > .bomb {
+    display: inline-block;
     float: left;
     width: 15px;
     height: 15px;
-    margin-top: 23px;
     margin-left: 3px;
     line-height: 15px;
     text-align: center;
@@ -154,6 +171,54 @@ body {
     opacity: .5;
 }
 
-.board > .row > .col > .player > .bomb:hover {
+.board > .row > .col > .player > .actions > .bomb:hover {
     opacity: .9;
+}
+
+.board > .row > .col > .player > .actions > .give-ap {
+    display: inline-block;
+    float: right;
+    width: 15px;
+    height: 15px;
+    margin-right: 3px;
+    line-height: 15px;
+    text-align: center;
+    font-size: 7px;
+    cursor: pointer;
+    transition: .2s;
+    background: #0097b1;
+    border-radius: 100%;
+    box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
+    opacity: .5;
+}
+
+.board > .row > .col > .player > .actions > .give-ap:hover {
+    opacity: .9;
+}
+
+.log-box {
+    width: 500px;
+    margin: auto;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    background: #444444;
+    padding: 10px;
+    height: 300px;
+    overflow: auto;
+    border: 1px solid black;
+}
+
+.log-box > .entry {
+    height: 30px;
+    line-height: 30px;
+}
+
+.log-box > .entry + .entry {
+    border-top: 1px solid rgba(0,0,0,.3);
+}
+
+.log-box > .entry > .time {
+    font-style: italic;
+    font-size: 13px;
+    color: #6b6b6b;
 }

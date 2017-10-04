@@ -5,7 +5,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!--<meta name="viewport" content="width=device-width, initial-scale=1.0">-->
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<title>BattleTanks</title>
 
@@ -32,20 +32,18 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			Array(
 				'id' => 1,
 				'name' => 'gficher',
-				'power' => 20,
+				'power' => 2,
 				'lives' => 3,
 				'picture' => 'me_pic.jpg',
-				'border' => 'yellow',
 				'x' => 6,
 				'y' => 3,
 			),
 			Array(
 				'id' => 2,
 				'name' => 'Bagatini',
-				'power' => 0,
+				'power' => 1,
 				'lives' => 3,
 				'picture' => 'bagatini.jpg',
-				'border' => '',
 				'x' => 9,
 				'y' => 4,
 			),
@@ -55,7 +53,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				'power' => 19,
 				'lives' => 3,
 				'picture' => 'priscila.jpg',
-				'border' => '',
 				'x' => 19,
 				'y' => 7,
 			),
@@ -65,27 +62,32 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				'power' => 7,
 				'lives' => 3,
 				'picture' => 'giovanna.jpg',
-				'border' => '',
 				'x' => 13,
 				'y' => 18,
 			),
 		);
 
-		for ($i=0; $i < $size; $i++) {
+		for ($i=0; $i <= $size; $i++) {
 			echo "<div class=\"row\">";
-			for ($j=0; $j < $size; $j++) {
-				//((abs($i-3) <= $range_size) and (abs($j-7) <= $range_size)) ? $range = 'range' : $range = '';
+			for ($j=0; $j <= $size; $j++) {
+				if (($i == 0) or ($j == 0)) {
+					$out = ($i == 0) ? $j-1 : $i-1;
+					if ($out == -1) $out = '';
+					echo "<div class=\"col coord\">$out</div>";
+					continue;
+				}
 
-				//echo "<div class=\"col {$range}\" data-x=\"{$j}\" data-y=\"{$i}\">";
 				echo "<div class=\"col\" data-x=\"{$j}\" data-y=\"{$i}\">";
 
 				foreach ($players as $value) {
 					if (($value['x'] == $j) and ($value['y'] == $i)) {
 						echo "
-						<div class=\"player\" data-id=\"{$value['id']}\">
+						<div class=\"player\" data-id=\"{$value['id']}\" data-name=\"{$value['name']}\">
+						<div class=\"status\">
 						<div class=\"power\">{$value['power']}</div>
 						<div class=\"lives\">{$value['lives']}</div>
-						<div class=\"picture tooltip\" style=\"background-image: url(/assets/img/{$value['picture']}); border-color: {$value['border']};\" title=\"{$value['name']}\"></div>
+						</div>
+						<div class=\"picture tooltip\" style=\"background-image: url(/assets/img/{$value['picture']});\" title=\"{$value['name']}\"></div>
 						</div>
 						";
 					}
@@ -96,6 +98,44 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			echo "</div>";
 		}
 		?>
+
+	<h2>Logbook</h2>
+		<div class="log-box">
+			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:32</span></div>
+			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
+			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
+			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
+			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
+			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
+			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
+			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
+			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
+			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
+			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
+			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
+			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
+			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
+			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
+			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
+			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
+			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
+			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
+			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
+			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
+			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
+			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
+			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
+			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
+			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
+			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
+			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
+			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
+			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
+			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
+			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
+			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
+			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
+		</div>
 	</div>
 
 	<script type="text/javascript" src="<?=base_url()?>assets/js/jquery-3.2.1.min.js"></script>
@@ -103,7 +143,29 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<script>
 	var me_id = 1;
 
+	function get_life(id) {
+		return parseInt($(".player[data-id='"+id+"']").find('.status .lives').html());
+	}
+
+	function use_life(id, life = 1) {
+		$(".player[data-id='"+id+"']").find('.status .lives').html((get_life(id)-life));
+		show_arrows(me_id);
+		paint_range(me_id);
+	}
+
+	function get_power(id) {
+		return parseInt($(".player[data-id='"+id+"']").find('.status .power').html());
+	}
+
+	function use_power(id, ap = 1) {
+		$(".player[data-id='"+id+"']").find('.status .power').html((get_power(id)-ap));
+		show_arrows(me_id);
+		paint_range(me_id);
+	}
+
 	function movePlayer(id, x, y) {
+		if (get_power(id) == 0) return;
+
 		$(".player[data-id='"+id+"']").animate({
 			left: 42*x+'px',
 			top: 42*y+'px',
@@ -119,8 +181,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				'top': '0',
 			});
 
-			show_arrows(id);
+			use_power(id);
+			if (get_power(id) != 0) show_arrows(id);
 			paint_range(id);
+
+			$("[data-id='"+id+"'] > .tooltip").tooltipster({
+				theme: 'tooltipster-borderless',
+				delay: 0,
+				content: $("[data-id='"+id+"']").attr('data-name'),
+			});
 		});
 	}
 
@@ -128,6 +197,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		cx = $(".player[data-id='"+id+"']").closest('.col').attr('data-x');
 		cy = $(".player[data-id='"+id+"']").closest('.col').attr('data-y');
 
+		$(".move-arrow").remove();
+
+		if (get_power(id) == 0) return;
 
 		for (var i = -1; i < 2; i++) {
 			for (var j = -1; j < 2; j++) {
@@ -147,7 +219,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 				$(".board > .row > .col[data-x='"+(parseInt(cx)+i)+"'][data-y='"+(parseInt(cy)+j)+"']").html("\
 				<div class=\"move-arrow\" data-dir=\""+dir+"\">\
-					<i class=\"fa fa-arrow-"+dir+"\"></i>\
+				<i class=\"fa fa-arrow-"+dir+"\"></i>\
 				</div>");
 			}
 		}
@@ -158,7 +230,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		cy = $(".player[data-id='"+id+"']").closest('.col').attr('data-y');
 
 		$(".range").removeClass('range');
-		$(".board > .row > .col > .player > .bomb").remove();
+		$(".board > .row > .col > .player > .actions").remove();
+
+		if (get_power(id) == 0) return;
 
 		for (var i = -range; i <= range; i++) {
 			for (var j = -range; j <= range; j++) {
@@ -172,8 +246,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			}
 		}
 
-		$(".board > .row > .col.range > .player").prepend("\
-			<div class=\"bomb\" title=\"Bomb\"><i class=\"fa fa-bomb\"></i></div>\
+		$(".board > .row > .col.range > .player").append("\
+		<div class=\"actions\">\
+		<div class=\"bomb\" title=\"Bomb\"><i class=\"fa fa-bomb\"></i></div>\
+		<div class=\"give-ap\" title=\"Give Action Point\"><i class=\"fa fa-plus\"></i></div>\
+		</div\
 		");
 	}
 
@@ -183,8 +260,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			delay: 0,
 		});
 
+		$(".player[data-id='"+me_id+"'] > .picture").css({
+			'border-color': 'yellow',
+		});
+
 		show_arrows(me_id);
-		paint_range(me_id)
+		paint_range(me_id);
 
 		$('.board > .row > .col').on("click", '.move-arrow', function() {
 			dir = $(this).attr('data-dir');
