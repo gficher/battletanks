@@ -1,5 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
+$alphabet = array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z');
+$alphabet[-1] = '';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -71,7 +73,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			echo "<div class=\"row\">";
 			for ($j=0; $j <= $size; $j++) {
 				if (($i == 0) or ($j == 0)) {
-					$out = ($i == 0) ? $j-1 : $i-1;
+					$out = ($i == 0) ? $alphabet[$j-1] : $i;
 					if ($out == -1) $out = '';
 					echo "<div class=\"col coord\">$out</div>";
 					continue;
@@ -103,45 +105,37 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		<div class="log-box">
 			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:32</span></div>
 			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
-			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
-			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
-			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
-			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
-			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
-			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
-			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
-			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
-			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
-			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
-			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
-			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
-			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
-			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
-			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
-			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
-			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
-			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
-			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
-			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
-			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
-			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
-			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
-			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
-			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
-			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
-			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
-			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
-			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
-			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
-			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
-			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
 		</div>
 	</div>
 
 	<script type="text/javascript" src="<?=base_url()?>assets/js/jquery-3.2.1.min.js"></script>
 	<script type="text/javascript" src="<?=base_url()?>assets/js/tooltipster.bundle.min.js"></script>
 	<script>
-	var me_id = 1;
+	var me_id = <?= $me_id ?>;
+
+	function login(username, password) {
+		$.post('/api/user/login', {
+			'user': username,
+			'pass': password,
+		}).done(function(data) {
+			console.log(data);
+			if (data.success) {
+				me_id = data.user;
+			} else {
+				//
+			}
+		}).fail(function(data) {
+			console.log(data);
+		});
+	}
+
+	function logout() {
+		$.post('/api/user/logout').done(function(data) {
+			console.log(data);
+		}).fail(function(data) {
+			console.log(data);
+		});
+	}
 
 	function get_life(id) {
 		return parseInt($(".player[data-id='"+id+"']").find('.status .lives').html());
@@ -191,6 +185,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				content: $("[data-id='"+id+"']").attr('data-name'),
 			});
 		});
+	}
+
+	function bombPlayer(id) {
+		return;
+	}
+
+	function empowerPlayer(id) {
+		return;
 	}
 
 	function show_arrows(id) {
