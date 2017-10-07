@@ -1,0 +1,53 @@
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class Logbook_model extends CI_Model {
+    private static $db;
+	private $info;
+
+	function __construct() {
+		parent::__construct();
+		$this->info = Array();
+
+		self::$db = &get_instance()->db;
+	}
+
+	public static function count() {
+		return self::$db->count_all("tanks_log");
+	}
+
+	public static function log($board, $action, $player, $target, $direction) {
+		$query = self::$db->query('INSERT INTO tanks_log (board, action, player, target, direction) VALUES (?,?,?,?,?)', Array(
+			$board,
+			$action,
+			$player,
+			$target,
+			$direction,
+		));
+		$id = self::$db->insert_id();
+		return $id;
+	}
+
+	public static function getList($board, $start_id) {
+		$return = Array();
+
+		$start_id = empty($start_id) ? 0 : $start_id;
+
+		$query = self::$db->query("SELECT * FROM tanks_log WHERE id > $start_id ORDER BY id asc");
+		foreach ($query->result_array() as $row) {
+			$return[] = $row;
+		}
+
+		if ($return) {
+			return $return;
+		} else {
+			return false;
+		}
+	}
+
+	public static function getLastUpdateId($board) {
+		$query = self::$db->query("SELECT id FROM tanks_log WHERE board = $board ORDER BY id desc LIMIT 1");
+		if (isset($query->result_array()[0]['id'])) return $query->result_array()[0]['id'];
+		return 0;
+	}
+}

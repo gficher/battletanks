@@ -31,13 +31,31 @@ class User extends MY_Controller {
 
 			echo json_encode(Array(
 				'success' => true,
-				'message' => 'Logged in.'
+				'message' => 'Logged in.',
+				'user' => $id,
 			), JSON_PRETTY_PRINT);
 			return 1;
 		} else {
 			echo json_encode(Array(
 				'success' => false,
 				'message' => 'Invalid credentials!'
+			), JSON_PRETTY_PRINT);
+			return 0;
+		}
+	}
+
+	public function getAuth() {
+		if ($this->user_model->isLoggedIn()) {
+			echo json_encode(Array(
+				'success' => true,
+				'message' => 'Logged in.',
+				'user' => $this->user_model->get('id'),
+			), JSON_PRETTY_PRINT);
+			return 1;
+		} else {
+			echo json_encode(Array(
+				'success' => false,
+				'message' => 'Not logged in.'
 			), JSON_PRETTY_PRINT);
 			return 0;
 		}
@@ -53,7 +71,7 @@ class User extends MY_Controller {
 
 			echo json_encode(Array(
 				'success' => true,
-				'message' => 'Logged out.'
+				'message' => 'Logged out.',
 			), JSON_PRETTY_PRINT);
 			return 1;
 		} else {

@@ -18,12 +18,8 @@ $alphabet[-1] = '';
 	<link rel="stylesheet" href="<?=base_url()?>assets/css/board.css">
 </head>
 <body>
-	<h1 class="title">BattleTanks</h1>
-	<p>
-		This game had its concept created by Halfbrick but then it was banned due to chaotic results.<br>
-		The rules are simple: you win one action point a day and can use it whenever you want. You can spend it by moving through the board, giving it to a nearby player or by attacking a player.<br>
-		Your main goal is to eliminate all other oponents and be the last one standing on the board.
-	</p>
+	<h1 class="title"><img src="/assets/img/logo.png" alt="BattleTanks" title="BattleTanks"></h1>
+	<p style="text-align: center">You can learn more about how it works <a href="https://archive.gficher.com/battletanks.pdf" target="_blank" title="BattleTanks Info">here</a>.</p>
 
 	<div class="board">
 		<?php
@@ -34,14 +30,14 @@ $alphabet[-1] = '';
 			Array(
 				'id' => 1,
 				'name' => 'gficher',
-				'power' => 2,
+				'power' => 3,
 				'lives' => 3,
 				'picture' => 'me_pic.jpg',
 				'x' => 6,
 				'y' => 3,
 			),
 			Array(
-				'id' => 2,
+				'id' => 7,
 				'name' => 'Bagatini',
 				'power' => 1,
 				'lives' => 3,
@@ -50,7 +46,7 @@ $alphabet[-1] = '';
 				'y' => 4,
 			),
 			Array(
-				'id' => 3,
+				'id' => 6,
 				'name' => 'Priscila',
 				'power' => 19,
 				'lives' => 3,
@@ -74,6 +70,7 @@ $alphabet[-1] = '';
 			for ($j=0; $j <= $size; $j++) {
 				if (($i == 0) or ($j == 0)) {
 					$out = ($i == 0) ? $alphabet[$j-1] : $i;
+					$out = ($i == 0) ? $j-1 : $i-1;
 					if ($out == -1) $out = '';
 					echo "<div class=\"col coord\">$out</div>";
 					continue;
@@ -111,7 +108,11 @@ $alphabet[-1] = '';
 	<script type="text/javascript" src="<?=base_url()?>assets/js/jquery-3.2.1.min.js"></script>
 	<script type="text/javascript" src="<?=base_url()?>assets/js/tooltipster.bundle.min.js"></script>
 	<script>
-	var me_id = <?= $me_id ?>;
+	var me_id;
+
+	function paintBoard(size) {
+
+	}
 
 	function login(username, password) {
 		$.post('/api/user/login', {
@@ -121,6 +122,7 @@ $alphabet[-1] = '';
 			console.log(data);
 			if (data.success) {
 				me_id = data.user;
+				repaint();
 			} else {
 				//
 			}
@@ -132,6 +134,10 @@ $alphabet[-1] = '';
 	function logout() {
 		$.post('/api/user/logout').done(function(data) {
 			console.log(data);
+			if (data.success) {
+				me_id = 0;
+				repaint();
+			}
 		}).fail(function(data) {
 			console.log(data);
 		});
@@ -234,7 +240,7 @@ $alphabet[-1] = '';
 		$(".range").removeClass('range');
 		$(".board > .row > .col > .player > .actions").remove();
 
-		if (get_power(id) == 0) return;
+		//if (get_power(id) == 0) return;
 
 		for (var i = -range; i <= range; i++) {
 			for (var j = -range; j <= range; j++) {
@@ -256,18 +262,33 @@ $alphabet[-1] = '';
 		");
 	}
 
+	function repaint() {
+		$(".move-arrow").remove();
+		$(".player[data-id] > .picture").css({
+			'border-color': 'transparent',
+		});
+		$(".player[data-id='"+me_id+"'] > .picture").css({
+			'border-color': 'yellow',
+		});
+		show_arrows(me_id);
+		paint_range(me_id);
+	}
+
 	$(document).ready(function() {
 		$('.tooltip').tooltipster({
 			theme: 'tooltipster-borderless',
 			delay: 0,
 		});
 
-		$(".player[data-id='"+me_id+"'] > .picture").css({
-			'border-color': 'yellow',
+		$.post('/api/user/getAUth').done(function(data) {
+			console.log(data);
+			if (data.success) {
+				me_id = data.user;
+				repaint();
+			}
+		}).fail(function(data) {
+			console.log(data);
 		});
-
-		show_arrows(me_id);
-		paint_range(me_id);
 
 		$('.board > .row > .col').on("click", '.move-arrow', function() {
 			dir = $(this).attr('data-dir');

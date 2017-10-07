@@ -19,10 +19,7 @@ class Welcome extends MY_Controller {
 	 * @see https://codeigniter.com/user_guide/general/urls.html
 	 */
 	public function index() {
-		$me_id = $this->user_model->get('id');
-		$this->load->view('welcome_message', Array(
-			'me_id' => empty($me_id) ? 0 : $me_id,
-		));
+		$this->load->view('welcome_message');
 	}
 
 	public function error404() {
