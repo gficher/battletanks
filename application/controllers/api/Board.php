@@ -376,9 +376,9 @@ class Board extends MY_Controller {
 	}
 
 	public function getUpdates() {
-		session_write_close();
 		header('Content-Type: text/event-stream');
 		header('Cache-Control: no-cache');
+		session_write_close();
 		echo "retry: 5000\n\n";
 
 		$this->load->model('Logbook_model', 'logbook');
@@ -408,22 +408,28 @@ class Board extends MY_Controller {
 		$last_id = $this->input->get('action');
 		while (1) {
 			$start = microtime(true);
+			$updates = $this->logbook->getList($this->input->get('board'), $last_id);
+			if ($last_id >= $updates[count($updates)-1]['id']) {
+				usleep(250000);
+				continue;
+			}
+
 			echo "data: ";
 			echo json_encode(Array(
 				'success' => true,
 				'handshake' => !$last_id,
 				'time_spent' => microtime(true)-$start,
-				'updates' => $this->logbook->getList($this->input->get('board'), $last_id),
+				'updates' => $updates,
 			));
+			echo "\n\n";
 
-			$last_id = $this->logbook->getLastUpdateId($this->input->get('board'));
+			if (is_array($updates)) $last_id = $updates[count($updates)-1]['id'];
 
 			while (ob_get_level() > 0) {
 				ob_end_flush();
 			}
 			flush();
 			sleep(1);
-			echo "\n\n";
 		}
 	}
 

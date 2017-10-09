@@ -24,10 +24,7 @@ $alphabet[-1] = '';
 	<div class="board"></div>
 
 	<h2  class="title">Logbook</h2>
-	<div class="log-box">
-		<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:32</span></div>
-		<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
-	</div>
+	<div class="log-box"></div>
 
 	<script type="text/javascript" src="<?=base_url()?>assets/js/jquery-3.2.1.min.js"></script>
 	<script type="text/javascript" src="<?=base_url()?>assets/js/tooltipster.bundle.min.js"></script>
@@ -38,56 +35,57 @@ $alphabet[-1] = '';
 	var listener;
 
 	function createListener() {
-		listener = new EventSource("/api/board/getUpdates?board="+board.toString()+"&id="+tab_id.toString()+"&action="+last_action.toString());
+		listener = new EventSource("/api/board/getUpdates?board="+board.toString()+"&id="+tab_id.toString()+"&action="+last_action.toString(), {
+			withCredentials: true,
+		});
 
 		listener.addEventListener('message', function(e) {
 			//console.log(e.data);
-
 			var data = JSON.parse(e.data);
+			//if (data.handshake) console.log(data);
 			if (data.success) {
 				if (data.updates !== false) {
-					if (data.handshake) {
-						console.log('Handshake data');
-						$.each(data.updates, function(key, value) {
-							//console.log(value);
+					$.each(data.updates, function(key, value) {
+						addToLog(value);
+						if (data.handshake) {
+							console.log('Handshake received');
 							last_action = value.id;
-						});
-					} else {
-						$.each(data.updates, function(key, value) {
+							return;
+						}
+						console.log('New log received', data);
+
+						if (last_action >= value.id) return;
+						switch (value.action) {
+							case "move":
+							//cx = $(".player[data-id='"+me_id+"']").closest('.col').attr('data-x');
+							//cy = $(".player[data-id='"+me_id+"']").closest('.col').attr('data-y');
+							//if (value.player_x == cx && value.player_y == cy) break;
+
+							movePlayer(value.player, value.direction);
+							break;
+							case "buy_life":
+							//life = $(".player[data-id='"+me_id+"'] > .status > .lives").html();
+							//if (value.player_life == life) break;
+
+							use_life(value.player, -1);
+							use_power(value.player, 5);
+							break;
+							case "attack":
+							//life = $(".player[data-id='"+value.target+"'] > .status > .lives").html();
+							//if (value.target_life == life) break;
+
+							attackPlayer(value.target_user);
+							break;
+							case "empower":
+							//power = $(".player[data-id='"+value.target+"'] > .status > .power").html();
+							//if (value.target_power == power) break;
+
+							empowerPlayer(value.target_user);
+							break;
+							default:
 							console.log(value);
-							if (last_action >= value.id) return;
-							switch (value.action) {
-								case "move":
-								cx = $(".player[data-id='"+me_id+"']").closest('.col').attr('data-x');
-								cy = $(".player[data-id='"+me_id+"']").closest('.col').attr('data-y');
-								if (value.player_x == cx && value.player_y == cy) break;
-
-								movePlayer(value.player, value.direction);
-								break;
-								case "buy_life":
-								life = $(".player[data-id='"+me_id+"'] > .status > .lives").html();
-								if (value.player_life == life) break;
-
-								use_life(value.player, -1);
-								use_power(value.player, 5);
-								break;
-								case "attack":
-								life = $(".player[data-id='"+value.target+"'] > .status > .lives").html();
-								if (value.target_life == life) break;
-
-								attackPlayer(value.target_user);
-								break;
-								case "empower":
-								power = $(".player[data-id='"+value.target+"'] > .status > .power").html();
-								if (value.target_power == power) break;
-
-								empowerPlayer(value.target_user);
-								break;
-								default:
-								console.log(value);
-							}
-						});
-					}
+						}
+					});
 				}
 			} else {
 				console.log(data);
@@ -99,11 +97,54 @@ $alphabet[-1] = '';
 		}, false);
 
 		listener.addEventListener('error', function(e) {
-			console.log('Listener closed');
+			console.log('Listener closed', e);
 			//if (e.readyState == EventSource.CLOSED) {
 			//}
-			createListener();
+			//createListener();
 		}, false);
+	}
+
+	function addToLog(value) {
+		switch (value.action) {
+			case "move":
+			switch (value.direction) {
+				case "u":
+				direction = "up";
+				break;
+				case "d":
+				direction = "down";
+				break;
+				case "l":
+				direction = "left";
+				break;
+				case "r":
+				direction = "right";
+				break;
+				default:
+				direction = "?";
+			}
+			$(".log-box").prepend("<div class=\"entry\">\
+			<i class=\"fa fa-fw fa-arrows\"></i> <b>"+value.player_username+"</b> moved <b>"+direction+"</b> <span class=\"time\">"+value.timestamp+"</span>\
+			</div>");
+			break;
+			case "buy_life":
+			$(".log-box").prepend("<div class=\"entry\">\
+			<i class=\"fa fa-fw fa-heart\"></i> <b>"+value.player_username+"</b> bought a life <span class=\"time\">"+value.timestamp+"</span>\
+			</div>");
+			break;
+			case "attack":
+			$(".log-box").prepend("<div class=\"entry\">\
+			<i class=\"fa fa-fw fa-bomb\"></i> <b>"+value.player_username+"</b> attacked <b>"+value.target_username+"</b> <span class=\"time\">"+value.timestamp+"</span>\
+			</div>");
+			break;
+			case "empower":
+			$(".log-box").prepend("<div class=\"entry\">\
+			<i class=\"fa fa-fw fa-power-off\"></i> <b>"+value.player_username+"</b> empowered <b>"+value.target_username+"</b> <span class=\"time\">"+value.timestamp+"</span>\
+			</div>");
+			break;
+			default:
+			console.log('Handshake log error', value);
+		}
 	}
 
 	function paintBoard(size) {
@@ -318,7 +359,7 @@ $alphabet[-1] = '';
 		$.get('/api/board/getBoard', {
 			id: board,
 		}).done(function(data) {
-			console.log(data);
+			console.log('Board data received', data);
 			if (data.success) {
 				paintBoard(parseInt(data.size));
 
@@ -343,18 +384,18 @@ $alphabet[-1] = '';
 				});
 
 				$.post('/api/user/getAUth').done(function(data) {
-					console.log(data);
+					console.log('Auth info received', data);
 					if (data.success) {
 						me_id = data.user;
 						repaint();
 						createListener();
 					}
 				}).fail(function(data) {
-					console.log(data);
+					console.error(data);
 				});
 			}
 		}).fail(function(data) {
-			console.log(data);
+			console.error(data);
 		});
 
 
@@ -366,14 +407,14 @@ $alphabet[-1] = '';
 				'player': me_id,
 				'dir': dir,
 			}).done(function(data) {
-				console.log(data);
+				console.log('Move result received', data);
 				if (data.success) {
 					last_action = data.action;
 					$(".move-arrow").remove();
 					movePlayer(me_id, dir);
 				}
 			}).fail(function(data) {
-				console.log(data);
+				console.error(data);
 			});
 		});
 
@@ -385,13 +426,13 @@ $alphabet[-1] = '';
 				'player': me_id,
 				'target': target,
 			}).done(function(data) {
-				console.log(data);
+				console.log('Attack result received', data);
 				if (data.success) {
 					last_action = data.action;
 					attackPlayer(target);
 				}
 			}).fail(function(data) {
-				console.log(data);
+				console.error(data);
 			});
 		});
 
@@ -403,13 +444,13 @@ $alphabet[-1] = '';
 				'player': me_id,
 				'target': target,
 			}).done(function(data) {
-				console.log(data);
+				console.log('Empower result received', data);
 				if (data.success) {
 					last_action = data.action;
 					empowerPlayer(target);
 				}
 			}).fail(function(data) {
-				console.log(data);
+				console.error(data);
 			});
 		});
 	});
