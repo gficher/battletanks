@@ -410,6 +410,10 @@ class Board extends MY_Controller {
 			$start = microtime(true);
 			$updates = $this->logbook->getList($this->input->get('board'), $last_id);
 			if ($last_id >= $updates[count($updates)-1]['id']) {
+				while (ob_get_level() > 0) {
+					ob_end_flush();
+				}
+				flush();
 				usleep(250000);
 				continue;
 			}

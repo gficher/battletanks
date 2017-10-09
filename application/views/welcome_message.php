@@ -32,10 +32,8 @@ $alphabet[-1] = '';
 	var tab_id = Math.floor((Math.random() * 10000000000) + 1);
 	var me_id, board = 1, last_action = 0;
 
-	var listener;
-
 	function createListener() {
-		listener = new EventSource("/api/board/getUpdates?board="+board.toString()+"&id="+tab_id.toString()+"&action="+last_action.toString(), {
+		var listener = new EventSource("/api/board/getUpdates?board="+board.toString()+"&id="+tab_id.toString()+"&action="+last_action.toString(), {
 			withCredentials: true,
 		});
 
@@ -57,29 +55,16 @@ $alphabet[-1] = '';
 						if (last_action >= value.id) return;
 						switch (value.action) {
 							case "move":
-							//cx = $(".player[data-id='"+me_id+"']").closest('.col').attr('data-x');
-							//cy = $(".player[data-id='"+me_id+"']").closest('.col').attr('data-y');
-							//if (value.player_x == cx && value.player_y == cy) break;
-
 							movePlayer(value.player, value.direction);
 							break;
 							case "buy_life":
-							//life = $(".player[data-id='"+me_id+"'] > .status > .lives").html();
-							//if (value.player_life == life) break;
-
 							use_life(value.player, -1);
 							use_power(value.player, 5);
 							break;
 							case "attack":
-							//life = $(".player[data-id='"+value.target+"'] > .status > .lives").html();
-							//if (value.target_life == life) break;
-
 							attackPlayer(value.target_user);
 							break;
 							case "empower":
-							//power = $(".player[data-id='"+value.target+"'] > .status > .power").html();
-							//if (value.target_power == power) break;
-
 							empowerPlayer(value.target_user);
 							break;
 							default:
@@ -98,9 +83,10 @@ $alphabet[-1] = '';
 
 		listener.addEventListener('error', function(e) {
 			console.log('Listener closed', e);
-			//if (e.readyState == EventSource.CLOSED) {
-			//}
-			//createListener();
+			if (e.readyState == EventSource.CLOSED) {
+				//createListener();
+				$(".log-box").find('.entry').remove();
+			}
 		}, false);
 	}
 
