@@ -21,97 +21,112 @@ $alphabet[-1] = '';
 	<h1 class="title"><img src="/assets/img/logo.png" alt="BattleTanks" title="BattleTanks"></h1>
 	<p style="text-align: center">You can learn more about how it works <a href="https://archive.gficher.com/battletanks.pdf" target="_blank" title="BattleTanks Info">here</a>.</p>
 
-	<div class="board">
-		<?php
-		$size = 20;
-		$range_size = 2;
+	<div class="board"></div>
 
-		$players = Array(
-			Array(
-				'id' => 1,
-				'name' => 'gficher',
-				'power' => 3,
-				'lives' => 3,
-				'picture' => 'me_pic.jpg',
-				'x' => 6,
-				'y' => 3,
-			),
-			Array(
-				'id' => 7,
-				'name' => 'Bagatini',
-				'power' => 1,
-				'lives' => 3,
-				'picture' => 'bagatini.jpg',
-				'x' => 9,
-				'y' => 4,
-			),
-			Array(
-				'id' => 6,
-				'name' => 'Priscila',
-				'power' => 19,
-				'lives' => 3,
-				'picture' => 'priscila.jpg',
-				'x' => 19,
-				'y' => 7,
-			),
-			Array(
-				'id' => 4,
-				'name' => 'Giovanna',
-				'power' => 7,
-				'lives' => 3,
-				'picture' => 'giovanna.jpg',
-				'x' => 13,
-				'y' => 18,
-			),
-		);
-
-		for ($i=0; $i <= $size; $i++) {
-			echo "<div class=\"row\">";
-			for ($j=0; $j <= $size; $j++) {
-				if (($i == 0) or ($j == 0)) {
-					$out = ($i == 0) ? $alphabet[$j-1] : $i;
-					$out = ($i == 0) ? $j-1 : $i-1;
-					if ($out == -1) $out = '';
-					echo "<div class=\"col coord\">$out</div>";
-					continue;
-				}
-
-				echo "<div class=\"col\" data-x=\"{$j}\" data-y=\"{$i}\">";
-
-				foreach ($players as $value) {
-					if (($value['x'] == $j) and ($value['y'] == $i)) {
-						echo "
-						<div class=\"player\" data-id=\"{$value['id']}\" data-name=\"{$value['name']}\">
-						<div class=\"status\">
-						<div class=\"power\">{$value['power']}</div>
-						<div class=\"lives\">{$value['lives']}</div>
-						</div>
-						<div class=\"picture tooltip\" style=\"background-image: url(/assets/img/{$value['picture']});\" title=\"{$value['name']}\"></div>
-						</div>
-						";
-					}
-				}
-
-				echo "</div>";
-			}
-			echo "</div>";
-		}
-		?>
-
-	<h2>Logbook</h2>
-		<div class="log-box">
-			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:32</span></div>
-			<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
-		</div>
+	<h2  class="title">Logbook</h2>
+	<div class="log-box">
+		<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:32</span></div>
+		<div class="entry"><i class="fa fa-fw fa-bomb"></i> <b>gficher</b> bombed <b>Bagatini</b> <span class="time">03/10/2017 22:10:21</span></div>
 	</div>
 
 	<script type="text/javascript" src="<?=base_url()?>assets/js/jquery-3.2.1.min.js"></script>
 	<script type="text/javascript" src="<?=base_url()?>assets/js/tooltipster.bundle.min.js"></script>
 	<script>
-	var me_id;
+	var tab_id = Math.floor((Math.random() * 10000000000) + 1);
+	var me_id, board = 1, last_action = 0;
+
+	var listener;
+
+	function createListener() {
+		listener = new EventSource("/api/board/getUpdates?board="+board.toString()+"&id="+tab_id.toString()+"&action="+last_action.toString());
+
+		listener.addEventListener('message', function(e) {
+			//console.log(e.data);
+
+			var data = JSON.parse(e.data);
+			if (data.success) {
+				if (data.updates !== false) {
+					if (data.handshake) {
+						console.log('Handshake data');
+						$.each(data.updates, function(key, value) {
+							//console.log(value);
+							last_action = value.id;
+						});
+					} else {
+						$.each(data.updates, function(key, value) {
+							console.log(value);
+							if (last_action >= value.id) return;
+							switch (value.action) {
+								case "move":
+								cx = $(".player[data-id='"+me_id+"']").closest('.col').attr('data-x');
+								cy = $(".player[data-id='"+me_id+"']").closest('.col').attr('data-y');
+								if (value.player_x == cx && value.player_y == cy) break;
+
+								movePlayer(value.player, value.direction);
+								break;
+								case "buy_life":
+								life = $(".player[data-id='"+me_id+"'] > .status > .lives").html();
+								if (value.player_life == life) break;
+
+								use_life(value.player, -1);
+								use_power(value.player, 5);
+								break;
+								case "attack":
+								life = $(".player[data-id='"+value.target+"'] > .status > .lives").html();
+								if (value.target_life == life) break;
+
+								attackPlayer(value.target_user);
+								break;
+								case "empower":
+								power = $(".player[data-id='"+value.target+"'] > .status > .power").html();
+								if (value.target_power == power) break;
+
+								empowerPlayer(value.target_user);
+								break;
+								default:
+								console.log(value);
+							}
+						});
+					}
+				}
+			} else {
+				console.log(data);
+			}
+		}, false);
+
+		listener.addEventListener('open', function(e) {
+			console.log('Listener connected', e);
+		}, false);
+
+		listener.addEventListener('error', function(e) {
+			console.log('Listener closed');
+			//if (e.readyState == EventSource.CLOSED) {
+			//}
+			createListener();
+		}, false);
+	}
 
 	function paintBoard(size) {
+		$(".board > .row").remove();
+		$(".board").css({
+			width: 42*(size+1)+'px',
+			height: 42*(size+1)+'px',
+		});
 
+		for (var i = 0; i <= size; i++) {
+			$(".board").append("<div class=\"row\"></div>");
+			for (var j = 0; j <= size; j++) {
+				if ((i==0) || (j==0)) {
+					out = (i == 0) ? j-1 : i-1;
+					if (out == -1) out = '';
+
+					$(".board > .row").last().append("<div class=\"col coord\">"+out+"</div>");
+					continue;
+				}
+
+				$(".board > .row").last().append("<div class=\"col\" data-x=\""+(j-1)+"\" data-y=\""+(i-1)+"\"></div>");
+			}
+		}
 	}
 
 	function login(username, password) {
@@ -123,8 +138,6 @@ $alphabet[-1] = '';
 			if (data.success) {
 				me_id = data.user;
 				repaint();
-			} else {
-				//
 			}
 		}).fail(function(data) {
 			console.log(data);
@@ -163,8 +176,21 @@ $alphabet[-1] = '';
 		paint_range(me_id);
 	}
 
-	function movePlayer(id, x, y) {
+	function movePlayer(id, dir) {
 		if (get_power(id) == 0) return;
+
+		x = 0;
+		y = 0;
+
+		if (dir == 'u') {
+			y--;
+		} else if (dir == 'd') {
+			y++;
+		} else if (dir == 'l') {
+			x--;
+		} else if (dir == 'r') {
+			x++;
+		}
 
 		$(".player[data-id='"+id+"']").animate({
 			left: 42*x+'px',
@@ -174,16 +200,20 @@ $alphabet[-1] = '';
 			cy = $(".player[data-id='"+id+"']").closest('.col').attr('data-y');
 
 			content = $(".player[data-id='"+id+"']").closest('.col').html();
+
 			$(".player[data-id='"+id+"']").remove();
 			$(".board > .row > .col[data-x='"+(parseInt(cx)+x)+"'][data-y='"+(parseInt(cy)+y)+"']").html(content);
+
 			$(".player[data-id='"+id+"']").css({
 				'left': '0',
 				'top': '0',
 			});
 
 			use_power(id);
-			if (get_power(id) != 0) show_arrows(id);
-			paint_range(id);
+			if (id == me_id) {
+				if (get_power(id) != 0) show_arrows(id);
+				paint_range(id);
+			}
 
 			$("[data-id='"+id+"'] > .tooltip").tooltipster({
 				theme: 'tooltipster-borderless',
@@ -193,11 +223,21 @@ $alphabet[-1] = '';
 		});
 	}
 
-	function bombPlayer(id) {
+	function attackPlayer(id) {
+		use_power(me_id);
+		use_life(id);
+
+		if (get_life(id) == 0) {
+			$(".player[data-id='"+id+"']").fadeOut(2000, function() {
+				$(this).remove();
+			});
+		}
 		return;
 	}
 
 	function empowerPlayer(id) {
+		use_power(me_id);
+		use_power(id, -1);
 		return;
 	}
 
@@ -257,7 +297,7 @@ $alphabet[-1] = '';
 		$(".board > .row > .col.range > .player").append("\
 		<div class=\"actions\">\
 		<div class=\"bomb\" title=\"Bomb\"><i class=\"fa fa-bomb\"></i></div>\
-		<div class=\"give-ap\" title=\"Give Action Point\"><i class=\"fa fa-plus\"></i></div>\
+		<div class=\"empower\" title=\"Give Action Point\"><i class=\"fa fa-plus\"></i></div>\
 		</div\
 		");
 	}
@@ -275,38 +315,102 @@ $alphabet[-1] = '';
 	}
 
 	$(document).ready(function() {
-		$('.tooltip').tooltipster({
-			theme: 'tooltipster-borderless',
-			delay: 0,
-		});
-
-		$.post('/api/user/getAUth').done(function(data) {
+		$.get('/api/board/getBoard', {
+			id: board,
+		}).done(function(data) {
 			console.log(data);
 			if (data.success) {
-				me_id = data.user;
-				repaint();
+				paintBoard(parseInt(data.size));
+
+				$.each(data.players, function(key, value) {
+					if (value.dead_time != null) return;
+
+					value.pos_x = (parseInt(value.pos_x)+1).toString();
+					value.pos_y = (parseInt(value.pos_y)+1).toString();
+
+					$(".board > .row > .col[data-x='"+(value.pos_x-1)+"'][data-y='"+(value.pos_y-1)+"']").append("<div class=\"player\" data-id=\""+value.user+"\" data-name=\""+value.username+"\">\
+					<div class=\"status\">\
+					<div class=\"power\">"+value.power+"</div>\
+					<div class=\"lives\">"+value.life+"</div>\
+					</div>\
+					<div class=\"picture tooltip\" style=\"background-image: url(https://gficher.com/profile_images/"+value.picture+");\" title=\""+value.username+"\"></div>\
+					</div>");
+				});
+
+				$('.tooltip').tooltipster({
+					theme: 'tooltipster-borderless',
+					delay: 0,
+				});
+
+				$.post('/api/user/getAUth').done(function(data) {
+					console.log(data);
+					if (data.success) {
+						me_id = data.user;
+						repaint();
+						createListener();
+					}
+				}).fail(function(data) {
+					console.log(data);
+				});
 			}
 		}).fail(function(data) {
 			console.log(data);
 		});
 
-		$('.board > .row > .col').on("click", '.move-arrow', function() {
-			dir = $(this).attr('data-dir');
-			x = 0;
-			y = 0;
 
-			if (dir == 'up') {
-				y--;
-			} else if (dir == 'down') {
-				y++;
-			} else if (dir == 'left') {
-				x--;
-			} else if (dir == 'right') {
-				x++;
-			}
+		$('body').on("click", '.board > .row > .col > .move-arrow', function() {
+			dir = $(this).attr('data-dir').charAt(0);
 
-			$(".move-arrow").remove();
-			movePlayer(me_id, x, y);
+			$.get('/api/board/move', {
+				'board': board,
+				'player': me_id,
+				'dir': dir,
+			}).done(function(data) {
+				console.log(data);
+				if (data.success) {
+					last_action = data.action;
+					$(".move-arrow").remove();
+					movePlayer(me_id, dir);
+				}
+			}).fail(function(data) {
+				console.log(data);
+			});
+		});
+
+		$('body').on("click", '.board > .row > .col > .player > .actions > .bomb', function() {
+			target = $(this).closest('.player').attr('data-id');
+
+			$.get('/api/board/attack', {
+				'board': board,
+				'player': me_id,
+				'target': target,
+			}).done(function(data) {
+				console.log(data);
+				if (data.success) {
+					last_action = data.action;
+					attackPlayer(target);
+				}
+			}).fail(function(data) {
+				console.log(data);
+			});
+		});
+
+		$('body').on("click", '.board > .row > .col > .player > .actions > .empower', function() {
+			target = $(this).closest('.player').attr('data-id');
+
+			$.get('/api/board/empower', {
+				'board': board,
+				'player': me_id,
+				'target': target,
+			}).done(function(data) {
+				console.log(data);
+				if (data.success) {
+					last_action = data.action;
+					empowerPlayer(target);
+				}
+			}).fail(function(data) {
+				console.log(data);
+			});
 		});
 	});
 	</script>

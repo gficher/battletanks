@@ -18,8 +18,8 @@ body {
 }
 
 .board {
-    width: 882px;
-    height: 882px;
+    width: 0px;
+    height: 0px;
     border: 3px solid #bababa;
     border-style: outset;
     margin: auto;
@@ -175,7 +175,7 @@ body {
     opacity: .9;
 }
 
-.board > .row > .col > .player > .actions > .give-ap {
+.board > .row > .col > .player > .actions > .empower {
     display: inline-block;
     float: right;
     width: 15px;
@@ -192,7 +192,7 @@ body {
     opacity: .5;
 }
 
-.board > .row > .col > .player > .actions > .give-ap:hover {
+.board > .row > .col > .player > .actions > .empower:hover {
     opacity: .9;
 }
 

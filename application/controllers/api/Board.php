@@ -5,31 +5,43 @@ class Board extends MY_Controller {
 	public function __construct() {
 		parent::__construct();
 		header('Content-Type: application/json');
+
+		if ($this->input->get('player')) {
+			if (!$this->user_model->checkPerm(24)) {
+				if ($this->input->get('player') != $this->user_model->get('id')) {
+					echo json_encode(Array(
+						'success' => false,
+						'message' => 'You cannot play as other player.'
+					), JSON_PRETTY_PRINT);
+					exit();
+				}
+			}
+		}
 	}
 
 	public function move() {
 		$this->load->model('Player_model', 'player');
 
 		$dir = Array(
-			'up' => Array(
+			'u' => Array(
 				'x' => 0,
 				'y' => -1,
 			),
-			'down' => Array(
+			'd' => Array(
 				'x' => 0,
 				'y' => 1,
 			),
-			'left' => Array(
+			'l' => Array(
 				'x' => -1,
 				'y' => 0,
 			),
-			'right' => Array(
+			'r' => Array(
 				'x' => 1,
 				'y' => 0,
 			),
 		);
 
-		if (!in_array($this->input->get('dir'), Array('up','down','left','right'))) {
+		if (!in_array($this->input->get('dir'), Array('u','d','l','r'))) {
 			echo json_encode(Array(
 				'success' => false,
 				'message' => 'Invalid direction.'
@@ -74,7 +86,12 @@ class Board extends MY_Controller {
 			return 0;
 		}
 
-		if (($this->player->get('pos_x') >= $this->board->get('size')) or ($this->player->get('pos_y') >= $this->board->get('size'))) {
+		if (
+			($this->player->get('pos_x') >= $this->board->get('size')) or
+			($this->player->get('pos_y') >= $this->board->get('size')) or
+			($this->player->get('pos_x') < 0) or
+			($this->player->get('pos_y') < 0)
+		) {
 			echo json_encode(Array(
 				'success' => false,
 				'message' => 'Cannot go outside the board.'
@@ -86,11 +103,52 @@ class Board extends MY_Controller {
 		$this->player->empower(-1);
 
 		$this->load->model('Logbook_model', 'logbook');
-		$this->logbook->log($this->input->get('board'), 'move', $this->input->get('player'), null, $this->input->get('dir'));
+		$action_id = $this->logbook->log($this->input->get('board'), 'move', $this->input->get('player'), null, $this->input->get('dir'));
 
 		echo json_encode(Array(
 			'success' => true,
 			'message' => 'Successful move.',
+			'action' => $action_id,
+		), JSON_PRETTY_PRINT);
+		return 1;
+	}
+
+	public function buyLife() {
+		$this->load->model('Player_model', 'player');
+
+		if (!$this->player->setPlayer($this->input->get('player'), $this->input->get('board'))) {
+			echo json_encode(Array(
+				'success' => false,
+				'message' => 'Actionee player not found.'
+			), JSON_PRETTY_PRINT);
+			return 0;
+		}
+		if ($this->player->get('dead_time')) {
+			echo json_encode(Array(
+				'success' => false,
+				'message' => 'Cannot interact when dead.'
+			), JSON_PRETTY_PRINT);
+			return 0;
+		}
+
+		if ($this->player->get('power') < 5) {
+			echo json_encode(Array(
+				'success' => false,
+				'message' => 'Not enough power.'
+			), JSON_PRETTY_PRINT);
+			return 0;
+		}
+
+		$this->player->empower(-5);
+		$this->player->attack(-1);
+
+		$this->load->model('Logbook_model', 'logbook');
+		$action_id = $this->logbook->log($this->input->get('board'), 'buy_life', $this->input->get('player'), null, null);
+
+		echo json_encode(Array(
+			'success' => true,
+			'message' => 'Successfully bought.',
+			'action' => $action_id,
 		), JSON_PRETTY_PRINT);
 		return 1;
 	}
@@ -148,11 +206,12 @@ class Board extends MY_Controller {
 		$this->target->attack();
 
 		$this->load->model('Logbook_model', 'logbook');
-		$this->logbook->log($this->input->get('board'), 'attack', $this->input->get('player'), $this->input->get('target'), null);
+		$action_id = $this->logbook->log($this->input->get('board'), 'attack', $this->input->get('player'), $this->input->get('target'), null);
 
 		echo json_encode(Array(
 			'success' => true,
 			'message' => 'Successful attack.',
+			'action' => $action_id,
 		), JSON_PRETTY_PRINT);
 		return 1;
 	}
@@ -210,11 +269,12 @@ class Board extends MY_Controller {
 		$this->target->empower();
 
 		$this->load->model('Logbook_model', 'logbook');
-		$this->logbook->log($this->input->get('board'), 'empower', $this->input->get('player'), $this->input->get('target'), null);
+		$action_id = $this->logbook->log($this->input->get('board'), 'empower', $this->input->get('player'), $this->input->get('target'), null);
 
 		echo json_encode(Array(
 			'success' => true,
-			'message' => 'Successful empower.'
+			'message' => 'Successful empower.',
+			'action' => $action_id,
 		), JSON_PRETTY_PRINT);
 		return 0;
 	}
@@ -258,47 +318,155 @@ class Board extends MY_Controller {
 		), JSON_PRETTY_PRINT);
 	}
 
-	public function getUpdates() {
+	public function getUpdatesOld() {
+		header('Content-Type: text/event-stream');
+		header('Cache-Control: no-cache');
+		echo "retry: 5000\n\n";
+		echo "data: ";
+
+
 		$this->load->model('Logbook_model', 'logbook');
 		$this->load->model('Board_model', 'board');
+		$this->load->model('Logbook_model', 'logbook');
 
 		if (!$this->board->setBoard($this->input->get('board'))) {
 			echo json_encode(Array(
 				'success' => false,
 				'message' => 'Board not found.'
-			), JSON_PRETTY_PRINT);
-			return 0;
-		}
-		if (!is_numeric($this->input->get('id'))) {
-			echo json_encode(Array(
-				'success' => false,
-				'message' => 'Invalid ID.'
-			), JSON_PRETTY_PRINT);
+			));
 			return 0;
 		}
 
-		echo json_encode(Array(
-			'success' => true,
-			'actions' => $this->logbook->getList($this->input->get('board'), $this->input->get('id')),
-		), JSON_PRETTY_PRINT);
+		if (!$this->input->get('id')) {
+			echo json_encode(Array(
+				'success' => false,
+				'message' => 'BTU session ID required.'
+			));
+			return 0;
+		}
+
+		while (1) {
+			$last_update = $this->logbook->getLastUpdateId($this->input->get('board'));
+			$last_id = $this->session->userdata('btu-'.$this->input->get('id'));
+
+			if (!$last_id) {
+				echo json_encode(Array(
+					'success' => true,
+					'handshake' => true,
+					'updates' => false,
+				));
+			} else {
+				echo json_encode(Array(
+					'success' => true,
+					'handshake' => false,
+					'updates' => $this->logbook->getList($this->input->get('board'), $last_id),
+				));
+			}
+
+			$this->session->set_userdata('btu-'.$this->input->get('id'), $last_update);
+
+			while (ob_get_level() > 0) {
+				ob_end_flush();
+			}
+			flush();
+			sleep(1);
+		}
+
+		echo "\n\n";
 	}
 
-	public function getLastUpdate() {
+	public function getUpdates() {
+		session_write_close();
+		header('Content-Type: text/event-stream');
+		header('Cache-Control: no-cache');
+		echo "retry: 5000\n\n";
+
 		$this->load->model('Logbook_model', 'logbook');
 		$this->load->model('Board_model', 'board');
+		$this->load->model('Logbook_model', 'logbook');
 
 		if (!$this->board->setBoard($this->input->get('board'))) {
+			echo "data: ";
 			echo json_encode(Array(
 				'success' => false,
 				'message' => 'Board not found.'
+			));
+			echo "\n\n";
+			return 0;
+		}
+
+		if (!$this->input->get('id')) {
+			echo "data: ";
+			echo json_encode(Array(
+				'success' => false,
+				'message' => 'BTU session ID required.'
+			));
+			echo "\n\n";
+			return 0;
+		}
+
+		$last_id = $this->input->get('action');
+		while (1) {
+			$start = microtime(true);
+			echo "data: ";
+			echo json_encode(Array(
+				'success' => true,
+				'handshake' => !$last_id,
+				'time_spent' => microtime(true)-$start,
+				'updates' => $this->logbook->getList($this->input->get('board'), $last_id),
+			));
+
+			$last_id = $this->logbook->getLastUpdateId($this->input->get('board'));
+
+			while (ob_get_level() > 0) {
+				ob_end_flush();
+			}
+			flush();
+			sleep(1);
+			echo "\n\n";
+		}
+	}
+
+	public function vote() {
+		$this->load->model('Player_model', 'player');
+		$this->load->model('Player_model', 'target');
+
+		if (!$this->player->setPlayer($this->input->get('player'), $this->input->get('board'))) {
+			echo json_encode(Array(
+				'success' => false,
+				'message' => 'Actionee player not found.'
+			), JSON_PRETTY_PRINT);
+			return 0;
+		}
+		if (!$this->target->setPlayer($this->input->get('target'), $this->input->get('board'))) {
+			echo json_encode(Array(
+				'success' => false,
+				'message' => 'Target player not found.'
 			), JSON_PRETTY_PRINT);
 			return 0;
 		}
 
+		if (!$this->player->get('dead_time')) {
+			echo json_encode(Array(
+				'success' => false,
+				'message' => 'Cannot interact when alive.'
+			), JSON_PRETTY_PRINT);
+			return 0;
+		}
+		if ($this->target->get('dead_time')) {
+			echo json_encode(Array(
+				'success' => false,
+				'message' => 'Cannot interact with dead people.'
+			), JSON_PRETTY_PRINT);
+			return 0;
+		}
+
+		$this->target->vote();
+
 		echo json_encode(Array(
 			'success' => true,
-			'last_update' => $this->logbook->getLastUpdateId($this->input->get('board')),
+			'message' => 'Successfully voted.',
 		), JSON_PRETTY_PRINT);
-		return 0;
+		return 1;
 	}
 }

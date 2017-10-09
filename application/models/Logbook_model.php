@@ -33,7 +33,13 @@ class Logbook_model extends CI_Model {
 
 		$start_id = empty($start_id) ? 0 : $start_id;
 
-		$query = self::$db->query("SELECT * FROM tanks_log WHERE id > $start_id ORDER BY id asc");
+		$query = self::$db->query("SELECT l.*,
+			p.user as player_user, p.pos_x as player_x, p.pos_y as player_y, p.life as player_life, p.power as player_power,
+			t.user as target_user, t.pos_x as target_x, t.pos_y as target_y, t.life as target_life, t.power as target_power
+			FROM tanks_log l
+			LEFT JOIN tanks_player p ON p.user = l.player AND p.board = l.board
+			LEFT JOIN tanks_player t ON t.user = l.target AND p.board = l.board
+			WHERE id > $start_id ORDER BY id asc");
 		foreach ($query->result_array() as $row) {
 			$return[] = $row;
 		}
