@@ -30,10 +30,13 @@ $alphabet[-1] = '';
 	<script type="text/javascript" src="<?=base_url()?>assets/js/tooltipster.bundle.min.js"></script>
 	<script>
 	var tab_id = Math.floor((Math.random() * 10000000000) + 1);
-	var me_id, board = 1, last_action = 0;
+	var me_id, board = 1, last_action = 0, listener;
+	var updateURL = function() {
+		return "/api/board/getUpdates?board="+board.toString()+"&id="+tab_id.toString()+"&action="+last_action.toString();
+	}
 
 	function createListener() {
-		var listener = new EventSource("/api/board/getUpdates?board="+board.toString()+"&id="+tab_id.toString()+"&action="+last_action.toString(), {
+		listener = new EventSource(updateURL(), {
 			withCredentials: true,
 		});
 
@@ -82,10 +85,11 @@ $alphabet[-1] = '';
 		}, false);
 
 		listener.addEventListener('error', function(e) {
-			console.log('Listener closed', e);
-			if (e.readyState == EventSource.CLOSED) {
-				//createListener();
-				$(".log-box").find('.entry').remove();
+			console.log('Listener closed', e, e.readyState);
+			if (e.readyState != EventSource.CLOSED) {
+				listener.close();
+				createListener();
+				//$(".log-box").find('.entry').remove();
 			}
 		}, false);
 	}
