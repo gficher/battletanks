@@ -132,6 +132,16 @@ $alphabet[-1] = '';
 			<i class=\"fa fa-fw fa-power-off\"></i> <b>"+value.player_username+"</b> empowered <b>"+value.target_username+"</b> <span class=\"time\">"+value.timestamp+"</span>\
 			</div>");
 			break;
+			case "death":
+			$(".log-box").prepend("<div class=\"entry\">\
+			<i class=\"fa fa-fw fa-wheelchair\"></i> <b>"+value.player_username+"</b> died gracefully.<span class=\"time\">"+value.timestamp+"</span>\
+			</div>");
+			break;
+			case "daily_power":
+			$(".log-box").prepend("<div class=\"entry\">\
+			<i class=\"fa fa-fw fa-wheelchair\"></i> <b>I feel the strength!</b> everyone got an extra power point.<span class=\"time\">"+value.timestamp+"</span>\
+			</div>");
+			break;
 			default:
 			console.log('Handshake log error', value);
 		}

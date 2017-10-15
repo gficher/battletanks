@@ -207,6 +207,9 @@ class Board extends MY_Controller {
 
 		$this->load->model('Logbook_model', 'logbook');
 		$action_id = $this->logbook->log($this->input->get('board'), 'attack', $this->input->get('player'), $this->input->get('target'), null);
+		if ($this->target->get('dead_time')) {
+			$action_id = $this->logbook->log($this->input->get('board'), 'death', $this->input->get('player'), null, null);
+		}
 
 		echo json_encode(Array(
 			'success' => true,
