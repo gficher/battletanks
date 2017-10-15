@@ -2,7 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Board_model extends CI_Model {
-    private static $db;
+	private static $db;
 	private $info;
 
 	function __construct() {
@@ -87,9 +87,11 @@ class Board_model extends CI_Model {
 		$return = Array();
 		$board = $this->get('id');
 
-		$query = self::$db->query("SELECT p.*, u.username, u.picture FROM tanks_player p
+		$query = self::$db->query("
+		SELECT p.*, u.username, u.picture FROM tanks_player p
 		LEFT JOIN users u ON p.user = u.id
-		WHERE board = $board");
+		WHERE board = $board
+		");
 
 		foreach ($query->result_array() as $row) {
 			$return[] = $row;
@@ -114,6 +116,18 @@ class Board_model extends CI_Model {
 
 		if ($return) {
 			return $return;
+		} else {
+			return false;
+		}
+	}
+
+	public function dailyEmpower() {
+		if (isset($this->info['id'])) {
+			$query = $this->db->query('
+			UPDATE tanks_player
+			LEFT JOIN tanks_board b ON p.board = b.id
+			SET p.power = p.power+1 WHERE p.dead_time is not NULL and b.end_time is NULL
+			');
 		} else {
 			return false;
 		}

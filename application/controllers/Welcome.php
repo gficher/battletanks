@@ -20,7 +20,6 @@ class Welcome extends MY_Controller {
 	 */
 	public function index() {
 		$this->load->view('welcome_message');
-		return true;
 	}
 
 	public function error404() {

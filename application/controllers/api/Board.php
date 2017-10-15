@@ -208,7 +208,7 @@ class Board extends MY_Controller {
 		$this->load->model('Logbook_model', 'logbook');
 		$action_id = $this->logbook->log($this->input->get('board'), 'attack', $this->input->get('player'), $this->input->get('target'), null);
 		if ($this->target->get('dead_time')) {
-			$action_id = $this->logbook->log($this->input->get('board'), 'death', $this->input->get('player'), null, null);
+			$this->logbook->log($this->input->get('board'), 'death', $this->input->get('player'), null, null);
 		}
 
 		echo json_encode(Array(
@@ -480,6 +480,26 @@ class Board extends MY_Controller {
 		echo json_encode(Array(
 			'success' => true,
 			'message' => 'Successfully voted.',
+		), JSON_PRETTY_PRINT);
+		return 1;
+	}
+
+	public function daily() {
+		if (php_sapi_name() != "cli") {
+			echo json_encode(Array(
+				'success' => false,
+				'message' => 'Only root is allowed to perform this action.',
+			), JSON_PRETTY_PRINT);
+			return 0;
+		}
+		$this->load->model('Board_model', 'board');
+		$this->board->dailyEmpower();
+
+		$this->logbook->log($this->input->get('board'), 'daily_power', null, null, null);
+
+		echo json_encode(Array(
+			'success' => true,
+			'message' => 'Successfully empowered everyone.',
 		), JSON_PRETTY_PRINT);
 		return 1;
 	}
