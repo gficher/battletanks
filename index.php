@@ -55,14 +55,13 @@
 */
 //define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : 'development');
 
-if (empty($_SERVER["HTTP_HOST"])) $_SERVER["HTTP_HOST"] = php_sapi_name();
-
 switch($_SERVER["HTTP_HOST"]) {
 	case "tanks.gficher.gdev":
 	define('ENVIRONMENT', 'development');
 	break;
 	case "tanks.gficher.com":
-	define('ENVIRONMENT', 'production');
+	define('ENVIRONMENT', 'development');
+	//define('ENVIRONMENT', 'production');
 	break;
 
 	case "cli":
