@@ -126,7 +126,7 @@ class Board_model extends CI_Model {
 			$query = $this->db->query('
 			UPDATE tanks_player
 			LEFT JOIN tanks_board b ON p.board = b.id
-			SET p.power = p.power+1 WHERE p.dead_time is not NULL and b.end_time is NULL
+			SET p.power = p.power+1 WHERE p.dead_time is NULL and b.end_time is NULL
 			');
 		} else {
 			return false;

@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 function redirect_ssl() {
     $CI =& get_instance();
     $class = $CI->router->directory.$CI->router->class;
-    $exclude = array('api/licenses','api/gddns');  // add more controller name to exclude ssl.
+    $exclude = array();  // add more controller names to exclude ssl.
 
     $isSecure = false;
     if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
@@ -21,6 +21,9 @@ function redirect_ssl() {
         $CI->config->config['base_url'] = str_replace('http://', 'https://', $CI->config->config['base_url']);
         if (!$isSecure) redirect($CI->uri->uri_string());
     } else {
+        if ($isSecure) {
+            $CI->config->config['base_url'] = str_replace('http://', 'https://', $CI->config->config['base_url']);
+        }
         // force redirecting with no ssl.
         //$CI->config->config['base_url'] = str_replace('https://', 'http://', $CI->config->config['base_url']);
         //if ($isSecure) redirect($CI->uri->uri_string());
