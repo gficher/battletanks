@@ -70,6 +70,9 @@ $alphabet[-1] = '';
 							case "empower":
 							empowerPlayer(value.target_user);
 							break;
+							case "daily_power":
+							dailyEmpower();
+							break;
 							default:
 							console.log(value);
 						}
@@ -134,12 +137,12 @@ $alphabet[-1] = '';
 			break;
 			case "death":
 			$(".log-box").prepend("<div class=\"entry\">\
-			<i class=\"fa fa-fw fa-wheelchair\"></i> <b>"+value.player_username+"</b> died gracefully.<span class=\"time\">"+value.timestamp+"</span>\
+			<i class=\"fa fa-fw fa-wheelchair\"></i> <b>"+value.player_username+"</b> died gracefully. <span class=\"time\">"+value.timestamp+"</span>\
 			</div>");
 			break;
 			case "daily_power":
 			$(".log-box").prepend("<div class=\"entry\">\
-			<i class=\"fa fa-fw fa-wheelchair\"></i> <b>I feel the strength!</b> everyone got an extra power point.<span class=\"time\">"+value.timestamp+"</span>\
+			<i class=\"fa fa-fw fa-plus\"></i> <b>Daily power!</b> <span class=\"time\">"+value.timestamp+"</span>\
 			</div>");
 			break;
 			default:
@@ -215,6 +218,12 @@ $alphabet[-1] = '';
 		$(".player[data-id='"+id+"']").find('.status .power').html((get_power(id)-ap));
 		show_arrows(me_id);
 		paint_range(me_id);
+	}
+
+	function dailyEmpower() {
+		$(".player").each(function(key, value) {
+			use_power($(this).attr('data-id'), -1);
+		});
 	}
 
 	function movePlayer(id, dir) {
