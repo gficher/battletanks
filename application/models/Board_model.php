@@ -122,14 +122,10 @@ class Board_model extends CI_Model {
 	}
 
 	public function dailyEmpower() {
-		if (isset($this->info['id'])) {
-			$query = $this->db->query('
-			UPDATE tanks_player p
-			LEFT JOIN tanks_board b ON p.board = b.id
-			SET p.power = p.power+1 WHERE p.dead_time is NULL and b.end_time is NULL
-			');
-		} else {
-			return false;
-		}
+		$query = $this->db->query('
+		UPDATE tanks_player p
+		LEFT JOIN tanks_board b ON p.board = b.id
+		SET p.power = p.power+1 WHERE p.dead_time is NULL and b.end_time is NULL
+		');
 	}
 }
