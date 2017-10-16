@@ -33,6 +33,10 @@ class User extends MY_Controller {
 				'success' => true,
 				'message' => 'Logged in.',
 				'user' => $id,
+				'picture' => $this->user_model->getPicture(),
+				'username' => $this->user_model->get('username'),
+				'name' => $this->user_model->get('name'),
+				'surname' => $this->user_model->get('surname'),
 			), JSON_PRETTY_PRINT);
 			return 1;
 		} else {
@@ -50,6 +54,10 @@ class User extends MY_Controller {
 				'success' => true,
 				'message' => 'Logged in.',
 				'user' => $this->user_model->get('id'),
+				'picture' => $this->user_model->getPicture(),
+				'username' => $this->user_model->get('username'),
+				'name' => $this->user_model->get('name'),
+				'surname' => $this->user_model->get('surname'),
 			), JSON_PRETTY_PRINT);
 			return 1;
 		} else {

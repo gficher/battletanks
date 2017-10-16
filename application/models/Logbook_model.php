@@ -41,7 +41,7 @@ class Logbook_model extends CI_Model {
 			LEFT JOIN users up ON up.id = p.user
 			LEFT JOIN tanks_player t ON t.user = l.target AND p.board = l.board
 			LEFT JOIN users ut ON ut.id = t.user
-			WHERE l.id > $start_id ORDER BY l.id asc");
+			WHERE l.id > $start_id AND l.board = $board ORDER BY l.id asc");
 		foreach ($query->result_array() as $row) {
 			$return[] = $row;
 		}

@@ -97,7 +97,7 @@ class Board_model extends CI_Model {
 			$return[] = $row;
 		}
 
-		if ($return) {
+		if (count($return)) {
 			return $return;
 		} else {
 			return false;
@@ -121,11 +121,66 @@ class Board_model extends CI_Model {
 		}
 	}
 
-	public function dailyEmpower() {
-		$query = $this->db->query('
+	public static function dailyEmpower() {
+		$query = self::$db->query('
 		UPDATE tanks_player p
 		LEFT JOIN tanks_board b ON p.board = b.id
 		SET p.power = p.power+1 WHERE p.dead_time is NULL and b.end_time is NULL
 		');
+	}
+
+	public static function roundUpToAny($n,$x=3) {
+		return (ceil($n)%$x === 0) ? ceil($n) : round(($n+$x/2)/$x)*$x;
+	}
+
+	public function joinPlayer($id) {
+		$players = Array();
+		foreach ($this->getPlayers() as $key => $value) {
+			$players[] = $value['user'];
+		}
+		
+		if (!in_array($id, $players)) {
+			$query = $this->db->query('INSERT INTO tanks_player (user, board) VALUES (?,?)', Array(
+				$id,
+				$this->get('id'),
+			));
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public function startGame() {
+		$players = $this->getPlayers();
+
+		$width = $this->roundUpToAny((count($players)/4)*3)+1;
+
+		$this->set('size', $width);
+		$this->set('size', $width);
+		$this->update();
+
+		$posx = $posy = 0;
+		$opx = 0; $opy = 0;
+
+		$this->load->model('Player_model', 'player');
+		foreach ($players as $key => $value) {
+			$this->player->setPlayer($value['user'], $this->get('id'));
+			$this->player->set('pos_x', $posx);
+			$this->player->set('pos_y', $posy);
+			$this->player->update();
+
+			if (($posx == 0) and ($posy == 0)) {
+				$opx = 0; $opy = 3;
+			} else if (($posy == $width-1) and ($posx == 0)) {
+				$opx = 3; $opy = 0;
+			} else if (($posy == $width-1) and ($posx == $width-1)) {
+				$opx = 0; $opy = -3;
+			} else if (($posy == 0) and ($posx == $width-1)) {
+				$opx = -3; $opy = 0;
+			}
+
+			$posx += $opx;
+			$posy += $opy;
+		}
 	}
 }

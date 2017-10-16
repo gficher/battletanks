@@ -309,6 +309,11 @@ class Board extends MY_Controller {
 		$outputTotal = count($this->board->getList());
 		$query = $this->board->getList($this->input->get('search'), '*', $order, 'asc', $per_page, ($page-1)*$per_page);
 
+		for ($i = 0; $i < count($query); $i++) {
+			$this->board->setBoard($query[$i]['id']);
+			$query[$i]['players'] = $this->board->getPlayers();
+		}
+
 		echo json_encode(Array(
 			'pagination' => Array(
 				'page' => $page,
@@ -319,63 +324,6 @@ class Board extends MY_Controller {
 			'success' => true,
 			'results' => $query,
 		), JSON_PRETTY_PRINT);
-	}
-
-	public function getUpdatesOld() {
-		header('Content-Type: text/event-stream');
-		header('Cache-Control: no-cache');
-		echo "retry: 5000\n\n";
-		echo "data: ";
-
-
-		$this->load->model('Logbook_model', 'logbook');
-		$this->load->model('Board_model', 'board');
-		$this->load->model('Logbook_model', 'logbook');
-
-		if (!$this->board->setBoard($this->input->get('board'))) {
-			echo json_encode(Array(
-				'success' => false,
-				'message' => 'Board not found.'
-			));
-			return 0;
-		}
-
-		if (!$this->input->get('id')) {
-			echo json_encode(Array(
-				'success' => false,
-				'message' => 'BTU session ID required.'
-			));
-			return 0;
-		}
-
-		while (1) {
-			$last_update = $this->logbook->getLastUpdateId($this->input->get('board'));
-			$last_id = $this->session->userdata('btu-'.$this->input->get('id'));
-
-			if (!$last_id) {
-				echo json_encode(Array(
-					'success' => true,
-					'handshake' => true,
-					'updates' => false,
-				));
-			} else {
-				echo json_encode(Array(
-					'success' => true,
-					'handshake' => false,
-					'updates' => $this->logbook->getList($this->input->get('board'), $last_id),
-				));
-			}
-
-			$this->session->set_userdata('btu-'.$this->input->get('id'), $last_update);
-
-			while (ob_get_level() > 0) {
-				ob_end_flush();
-			}
-			flush();
-			sleep(1);
-		}
-
-		echo "\n\n";
 	}
 
 	public function getUpdates() {
@@ -393,16 +341,6 @@ class Board extends MY_Controller {
 			echo json_encode(Array(
 				'success' => false,
 				'message' => 'Board not found.'
-			));
-			echo "\n\n";
-			return 0;
-		}
-
-		if (!$this->input->get('id')) {
-			echo "data: ";
-			echo json_encode(Array(
-				'success' => false,
-				'message' => 'BTU session ID required.'
 			));
 			echo "\n\n";
 			return 0;
@@ -507,5 +445,80 @@ class Board extends MY_Controller {
 			'message' => 'Successfully empowered everyone.',
 		), JSON_PRETTY_PRINT);
 		return 1;
+	}
+
+	public function startGame() {
+		$this->load->model('Board_model', 'board');
+
+		if (!$this->board->setBoard($this->input->get('board'))) {
+			echo json_encode(Array(
+				'success' => false,
+				'message' => 'Board not found.'
+			));
+			return 0;
+		}
+
+		if (!empty($this->board->get('size'))) {
+			echo json_encode(Array(
+				'success' => false,
+				'message' => 'Board is already started.'
+			));
+			return 0;
+		}
+
+		if ($this->board->getPlayers()) {
+			$this->board->startGame();
+			echo json_encode(Array(
+				'success' => true,
+				'message' => 'Board started!',
+			));
+			return 1;
+		} else {
+			echo json_encode(Array(
+				'success' => false,
+				'message' => 'Board has no players.'
+			));
+			return 0;
+		}
+	}
+
+	public function join() {
+		$this->load->model('Player_model', 'player');
+		$this->load->model('Player_model', 'target');
+
+		if (!$this->player->setPlayer($this->input->get('player'), $this->input->get('board'))) {
+			echo json_encode(Array(
+				'success' => false,
+				'message' => 'Actionee player not found.'
+			), JSON_PRETTY_PRINT);
+			return 0;
+		}
+
+		if (!$this->board->setBoard($this->input->get('board'))) {
+			echo "data: ";
+			echo json_encode(Array(
+				'success' => false,
+				'message' => 'Board not found.'
+			));
+			echo "\n\n";
+			return 0;
+		}
+
+		if ($this->board->joinPlayer($this->input->get('player'))) {
+			$this->load->model('Logbook_model', 'logbook');
+			$this->logbook->log($this->input->get('board'), 'join', $this->input->get('player'), null, null);
+
+			echo json_encode(Array(
+				'success' => true,
+				'message' => 'Successfully joined.',
+			), JSON_PRETTY_PRINT);
+			return 1;
+		} else {
+			echo json_encode(Array(
+				'success' => false,
+				'message' => 'Could joing game.',
+			), JSON_PRETTY_PRINT);
+			return 0;
+		}
 	}
 }
