@@ -135,10 +135,12 @@ class Board_model extends CI_Model {
 
 	public function joinPlayer($id) {
 		$players = Array();
-		foreach ($this->getPlayers() as $key => $value) {
-			$players[] = $value['user'];
+		if ($this->getPlayers()) {
+			foreach ($this->getPlayers() as $key => $value) {
+				$players[] = $value['user'];
+			}
 		}
-		
+
 		if (!in_array($id, $players)) {
 			$query = $this->db->query('INSERT INTO tanks_player (user, board) VALUES (?,?)', Array(
 				$id,
@@ -182,5 +184,17 @@ class Board_model extends CI_Model {
 			$posx += $opx;
 			$posy += $opy;
 		}
+	}
+
+	public function isJoiningMode() {
+		// Game in progress
+		if (new DateTime() > new DateTime($this->get('start_date'))) {
+			return 0;
+		}
+		// Too early
+		if (new DateTime() < new DateTime($this->get('join_date'))) {
+			return 0;
+		}
+		return 1;
 	}
 }

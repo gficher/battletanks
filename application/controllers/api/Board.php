@@ -487,19 +487,28 @@ class Board extends MY_Controller {
 		$this->load->model('Player_model', 'player');
 		$this->load->model('Player_model', 'target');
 
-		if (!$this->player->setPlayer($this->input->get('player'), $this->input->get('board'))) {
-			echo json_encode(Array(
-				'success' => false,
-				'message' => 'Actionee player not found.',
-			), JSON_PRETTY_PRINT);
-			return 0;
-		}
-
 		if (!$this->board->setBoard($this->input->get('board'))) {
 			echo json_encode(Array(
 				'success' => false,
 				'message' => 'Board not found.'
 			));
+			return 0;
+		}
+
+		// Board is not in joining mode
+		if (!$this->board->isJoiningMode()) {
+			echo json_encode(Array(
+				'success' => false,
+				'message' => 'Cannot join that game.'
+			));
+			return 0;
+		}
+
+		if ($this->player->setPlayer($this->input->get('player'), $this->input->get('board'))) {
+			echo json_encode(Array(
+				'success' => false,
+				'message' => 'Player already in game.',
+			), JSON_PRETTY_PRINT);
 			return 0;
 		}
 

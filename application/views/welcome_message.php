@@ -121,7 +121,7 @@ $alphabet[-1] = '';
 				<div class="bt-board"></div>
 				<div class="board-countdown">
 					<div class="countdown">00:00:00:00</div>
-					<button class="btn-success btn-lg">Join game</button>
+					<button class="btn btn-primary btn-lg"><span>Join game</span></button>
 				</div>
 			</div>
 		</div>
@@ -811,13 +811,36 @@ $alphabet[-1] = '';
 		});
 
 		$('#game_board .board-countdown').on("click", 'button', function() {
+			button = $(this);
+
+			button.attr('disabled', true);
+			button.find('span').fadeOut(function() {
+				$(this).html('<i class="fa fa-fw fa-spinner fa-spin"></i>');
+			}).fadeIn();
+
+
 			$.get('/api/board/join', {
 				'board': board,
 				'player': me_id,
 			}).done(function(data) {
 				console.log('Join result received', data);
 				if (data.success) {
-					//
+					button.find('span').fadeOut(function() {
+						$(this).html('You have joined the game');
+						button.addClass('btn-success').removeClass('btn-primary');
+					}).fadeIn();
+				} else {
+					button.prop('disabled', false);
+					button.find('span').fadeOut(function() {
+						$(this).html('Failed to join');
+						button.addClass('btn-danger').removeClass('btn-primary');
+						setTimeout(function() {
+							button.find('span').fadeOut(function() {
+								$(this).html('Join game');
+								button.addClass('btn-primary').removeClass('btn-danger');
+							}).fadeIn();
+						}, 2000);
+					}).fadeIn();
 				}
 			}).fail(function(data) {
 				console.error(data);
