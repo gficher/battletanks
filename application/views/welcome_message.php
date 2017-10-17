@@ -811,10 +811,8 @@ $alphabet[-1] = '';
 		});
 
 		$('#game_board .board-countdown').on("click", 'button', function() {
-			id = $(this).closest('tr').attr('data-id');
-
 			$.get('/api/board/join', {
-				'board': id,
+				'board': board,
 				'player': me_id,
 			}).done(function(data) {
 				console.log('Join result received', data);

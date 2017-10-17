@@ -483,24 +483,23 @@ class Board extends MY_Controller {
 	}
 
 	public function join() {
+		$this->load->model('Board_model', 'board');
 		$this->load->model('Player_model', 'player');
 		$this->load->model('Player_model', 'target');
 
 		if (!$this->player->setPlayer($this->input->get('player'), $this->input->get('board'))) {
 			echo json_encode(Array(
 				'success' => false,
-				'message' => 'Actionee player not found.'
+				'message' => 'Actionee player not found.',
 			), JSON_PRETTY_PRINT);
 			return 0;
 		}
 
 		if (!$this->board->setBoard($this->input->get('board'))) {
-			echo "data: ";
 			echo json_encode(Array(
 				'success' => false,
 				'message' => 'Board not found.'
 			));
-			echo "\n\n";
 			return 0;
 		}
 
@@ -516,7 +515,7 @@ class Board extends MY_Controller {
 		} else {
 			echo json_encode(Array(
 				'success' => false,
-				'message' => 'Could joing game.',
+				'message' => 'Could not join game.',
 			), JSON_PRETTY_PRINT);
 			return 0;
 		}
