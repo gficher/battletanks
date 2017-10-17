@@ -561,12 +561,16 @@ class Board extends MY_Controller {
 			return 0;
 		}
 		$this->load->model('Board_model', 'board');
-		$this->board->daily();
+		$this->board->dailyEmpower();
 
 		$this->load->model('Logbook_model', 'logbook');
 		foreach ($this->board->getList() as $key => $value) {
 			if (!empty($value['end_time'])) continue;
 			$this->logbook->log($value['id'], 'daily_power', null, null, null);
+		}
+
+		foreach ($this->board->runVote() as $key => $value) {
+			$this->logbook->log($value['board'], 'vote_power', $value['player'], null, null);
 		}
 
 		echo json_encode(Array(

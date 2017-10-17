@@ -121,34 +121,52 @@ class Board_model extends CI_Model {
 		}
 	}
 
-	public static function daily() {
+	public static function dailyEmpower() {
 		$query = self::$db->query('
 		UPDATE tanks_player p
 		LEFT JOIN tanks_board b ON p.board = b.id
 		SET p.power = p.power+1 WHERE p.dead_time is NULL AND b.end_time is NULL AND start_time < NOW()
 		');
+	}
 
+	public function runVote() {
+		$output = Array();
 		$winners = Array();
-		$query = self::$db->query('SELECT COUNT(*) as count,board,target,DATE(vote_time) FROM tanks_vote WHERE DATE(vote_time) = DATE_SUB(CURDATE(), INTERVAL 1 DAY) GROUP BY board,target,DATE(vote_time) ORDER BY COUNT(*) DESC');
+		$query = self::$db->query('SELECT COUNT(*) as count,board,target,DATE(vote_time) FROM tanks_vote WHERE DATE(vote_time) = DATE_SUB(CURDATE(), INTERVAL 1 DAY) GROUP BY board,target,DATE(vote_time) ORDER BY board ASC, COUNT(*) DESC');
+
 		foreach ($query->result_array() as $row) {
-			if (count($winners) == 0) {
-				$return[] = $row;
-				continue;
-			}
-			if ($winners[count($winners)-1]['count'] > $row['count']) break;
-			$winners[] = $row;
+			$winners[$row['board']][] = $row;
 		}
 
-		if (count($winners) >= 1) {
-			$query = self::$db->query('
-			UPDATE tanks_player p
-			LEFT JOIN tanks_board b ON p.board = b.id
-			SET p.power = p.power+1 WHERE p.dead_time is NULL AND b.end_time is NULL AND start_time < NOW() AND p.user = ? AND p.board = ?
-			', Array(
-				$winners[rand(0, count($winners)-1)]['player'],
-				$this->get('board'),
-			));
+		foreach ($winners as $key => $value) {
+			$bigger = 0;
+			for ($i = 0; $i < count($value); $i++) {
+				if ($bigger == 0) {
+					$bigger = $value[$i]['count'];
+				} else {
+					if ($value[$i]['count'] < $bigger) {
+						unset($winners[$key][$i]);
+					}
+				}
+			}
+			if (count($winners[$key]) >= 1) {
+				$output[] = Array(
+					'board' => $key,
+					'player' => $winners[$key][rand(0, count($winners[$key])-1)]['target'],
+				);
+
+				$query = $this->db->query('
+				UPDATE tanks_player p
+				LEFT JOIN tanks_board b ON p.board = b.id
+				SET p.power = p.power+1 WHERE p.dead_time is NULL AND b.end_time is NULL AND start_time < NOW() AND p.user = ? AND p.board = ?
+				', Array(
+					$output[count($output)-1]['target'],
+					$this->get('board'),
+				));
+			}
+
 		}
+		return $output;
 	}
 
 	public static function roundUpToAny($n,$x=3) {
