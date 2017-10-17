@@ -245,7 +245,7 @@ class Board_model extends CI_Model {
 	}
 
 	public function isJoiningMode() {
-		if ((new DateTime() < new DateTime($this->get('start_time'))) and (new DateTime() > new DateTime($this->get('join_time'))))
+		if ((new DateTime() < new DateTime($this->get('start_time'))) and (new DateTime() > new DateTime($this->get('open_time'))))
 		return 1;
 		return 0;
 	}
