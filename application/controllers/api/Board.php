@@ -21,6 +21,7 @@ class Board extends MY_Controller {
 
 	public function move() {
 		$this->load->model('Player_model', 'player');
+		$this->load->model('Board_model', 'board');
 
 		$dir = Array(
 			'u' => Array(
@@ -45,6 +46,22 @@ class Board extends MY_Controller {
 			echo json_encode(Array(
 				'success' => false,
 				'message' => 'Invalid direction.'
+			), JSON_PRETTY_PRINT);
+			return 0;
+		}
+
+		if (!$this->board->setBoard($this->input->get('board'))) {
+			echo json_encode(Array(
+				'success' => false,
+				'message' => 'Board not found.'
+			), JSON_PRETTY_PRINT);
+			return 0;
+		}
+
+		if (!$this->board->isGamingMode()) {
+			echo json_encode(Array(
+				'success' => false,
+				'message' => 'Cannot play while not in gaming mode.'
 			), JSON_PRETTY_PRINT);
 			return 0;
 		}
@@ -115,6 +132,23 @@ class Board extends MY_Controller {
 
 	public function buyLife() {
 		$this->load->model('Player_model', 'player');
+		$this->load->model('Board_model', 'board');
+
+		if (!$this->board->setBoard($this->input->get('board'))) {
+			echo json_encode(Array(
+				'success' => false,
+				'message' => 'Board not found.'
+			), JSON_PRETTY_PRINT);
+			return 0;
+		}
+
+		if (!$this->board->isGamingMode()) {
+			echo json_encode(Array(
+				'success' => false,
+				'message' => 'Cannot play while not in gaming mode.'
+			), JSON_PRETTY_PRINT);
+			return 0;
+		}
 
 		if (!$this->player->setPlayer($this->input->get('player'), $this->input->get('board'))) {
 			echo json_encode(Array(
@@ -154,8 +188,25 @@ class Board extends MY_Controller {
 	}
 
 	public function attack() {
+		$this->load->model('Board_model', 'board');
 		$this->load->model('Player_model', 'player');
 		$this->load->model('Player_model', 'target');
+
+		if (!$this->board->setBoard($this->input->get('board'))) {
+			echo json_encode(Array(
+				'success' => false,
+				'message' => 'Board not found.'
+			), JSON_PRETTY_PRINT);
+			return 0;
+		}
+
+		if (!$this->board->isGamingMode()) {
+			echo json_encode(Array(
+				'success' => false,
+				'message' => 'Cannot play while not in gaming mode.'
+			), JSON_PRETTY_PRINT);
+			return 0;
+		}
 
 		if (!$this->player->setPlayer($this->input->get('player'), $this->input->get('board'))) {
 			echo json_encode(Array(
@@ -220,8 +271,25 @@ class Board extends MY_Controller {
 	}
 
 	public function empower() {
+		$this->load->model('Board_model', 'board');
 		$this->load->model('Player_model', 'player');
 		$this->load->model('Player_model', 'target');
+
+		if (!$this->board->setBoard($this->input->get('board'))) {
+			echo json_encode(Array(
+				'success' => false,
+				'message' => 'Board not found.'
+			), JSON_PRETTY_PRINT);
+			return 0;
+		}
+
+		if (!$this->board->isGamingMode()) {
+			echo json_encode(Array(
+				'success' => false,
+				'message' => 'Cannot play while not in gaming mode.'
+			), JSON_PRETTY_PRINT);
+			return 0;
+		}
 
 		if (!$this->player->setPlayer($this->input->get('player'), $this->input->get('board'))) {
 			echo json_encode(Array(
@@ -380,8 +448,25 @@ class Board extends MY_Controller {
 	}
 
 	public function vote() {
+		$this->load->model('Board_model', 'board');
 		$this->load->model('Player_model', 'player');
 		$this->load->model('Player_model', 'target');
+
+		if (!$this->board->setBoard($this->input->get('board'))) {
+			echo json_encode(Array(
+				'success' => false,
+				'message' => 'Board not found.'
+			), JSON_PRETTY_PRINT);
+			return 0;
+		}
+
+		if (!$this->board->isGamingMode()) {
+			echo json_encode(Array(
+				'success' => false,
+				'message' => 'Cannot play while not in gaming mode.'
+			), JSON_PRETTY_PRINT);
+			return 0;
+		}
 
 		if (!$this->player->setPlayer($this->input->get('player'), $this->input->get('board'))) {
 			echo json_encode(Array(
@@ -413,11 +498,55 @@ class Board extends MY_Controller {
 			return 0;
 		}
 
-		$this->target->vote();
+		$this->player->vote($this->input->get('target'));
 
 		echo json_encode(Array(
 			'success' => true,
 			'message' => 'Successfully voted.',
+		), JSON_PRETTY_PRINT);
+		return 1;
+	}
+
+	public function getMyVote() {
+		$this->load->model('Board_model', 'board');
+		$this->load->model('Player_model', 'player');
+
+		if (!$this->board->setBoard($this->input->get('board'))) {
+			echo json_encode(Array(
+				'success' => false,
+				'message' => 'Board not found.'
+			), JSON_PRETTY_PRINT);
+			return 0;
+		}
+
+		if (!$this->board->isGamingMode()) {
+			echo json_encode(Array(
+				'success' => false,
+				'message' => 'Cannot play while not in gaming mode.'
+			), JSON_PRETTY_PRINT);
+			return 0;
+		}
+
+		if (!$this->player->setPlayer($this->input->get('player'), $this->input->get('board'))) {
+			echo json_encode(Array(
+				'success' => false,
+				'message' => 'Actionee player not found.'
+			), JSON_PRETTY_PRINT);
+			return 0;
+		}
+
+		if (!$this->player->get('dead_time')) {
+			echo json_encode(Array(
+				'success' => false,
+				'message' => 'Cannot interact when alive.'
+			), JSON_PRETTY_PRINT);
+			return 0;
+		}
+
+		echo json_encode(Array(
+			'success' => true,
+			'message' => 'Successfully gotten vote.',
+			'vote' => $this->player->getVote(),
 		), JSON_PRETTY_PRINT);
 		return 1;
 	}
@@ -432,7 +561,7 @@ class Board extends MY_Controller {
 			return 0;
 		}
 		$this->load->model('Board_model', 'board');
-		$this->board->dailyEmpower();
+		$this->board->daily();
 
 		$this->load->model('Logbook_model', 'logbook');
 		foreach ($this->board->getList() as $key => $value) {
@@ -485,7 +614,6 @@ class Board extends MY_Controller {
 	public function join() {
 		$this->load->model('Board_model', 'board');
 		$this->load->model('Player_model', 'player');
-		$this->load->model('Player_model', 'target');
 
 		if (!$this->board->setBoard($this->input->get('board'))) {
 			echo json_encode(Array(
@@ -528,5 +656,71 @@ class Board extends MY_Controller {
 			), JSON_PRETTY_PRINT);
 			return 0;
 		}
+	}
+
+	public function leave() {
+		$this->load->model('Board_model', 'board');
+		$this->load->model('Player_model', 'player');
+
+		if (!$this->board->setBoard($this->input->get('board'))) {
+			echo json_encode(Array(
+				'success' => false,
+				'message' => 'Board not found.'
+			));
+			return 0;
+		}
+
+		// Board is not in joining mode
+		if (!$this->board->isJoiningMode()) {
+			echo json_encode(Array(
+				'success' => false,
+				'message' => 'Cannot leave that game.'
+			));
+			return 0;
+		}
+
+		if (!$this->player->setPlayer($this->input->get('player'), $this->input->get('board'))) {
+			echo json_encode(Array(
+				'success' => false,
+				'message' => 'Player not in game.',
+			), JSON_PRETTY_PRINT);
+			return 0;
+		}
+
+		if ($this->board->leavePlayer($this->input->get('player'))) {
+			$this->load->model('Logbook_model', 'logbook');
+			$this->logbook->log($this->input->get('board'), 'leave', $this->input->get('player'), null, null);
+
+			echo json_encode(Array(
+				'success' => true,
+				'message' => 'Successfully left.',
+			), JSON_PRETTY_PRINT);
+			return 1;
+		} else {
+			echo json_encode(Array(
+				'success' => false,
+				'message' => 'Could not leave game.',
+			), JSON_PRETTY_PRINT);
+			return 0;
+		}
+	}
+
+	public function getPlayerList() {
+		$this->load->model('Board_model', 'board');
+
+		if (!$this->board->setBoard($this->input->get('board'))) {
+			echo json_encode(Array(
+				'success' => false,
+				'message' => 'Board not found.'
+			));
+			return 0;
+		}
+
+		echo json_encode(Array(
+			'success' => true,
+			'message' => 'Board found.',
+			'players' => $this->board->getPlayers(),
+		));
+		return 1;
 	}
 }

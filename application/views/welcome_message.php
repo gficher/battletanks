@@ -139,6 +139,7 @@ $alphabet[-1] = '';
 								<th>Name</th>
 								<th>Life</th>
 								<th>Power</th>
+								<th width="1"><i class="fa fa-fw fa-handshake-o" title="Vote for player"></i></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -265,6 +266,12 @@ $alphabet[-1] = '';
 							case "daily_power":
 							dailyEmpower();
 							break;
+							case "join":
+							updatePlayerList();
+							break;
+							case "leave":
+							updatePlayerList();
+							break;
 							default:
 							console.log(value);
 						}
@@ -342,9 +349,78 @@ $alphabet[-1] = '';
 			<i class=\"fa fa-fw fa-sign-in\"></i> <b>"+value.player_username+"</b> joined the board. <span class=\"time\">"+value.timestamp+"</span>\
 			</div>");
 			break;
+			case "leave":
+			$(".log-box").prepend("<div class=\"entry\">\
+			<i class=\"fa fa-fw fa-sign-out\"></i> <b>"+value.player_username+"</b> left the board. <span class=\"time\">"+value.timestamp+"</span>\
+			</div>");
+			break;
 			default:
 			console.log('Handshake log error', value);
 		}
+	}
+
+	function updatePlayerList() {
+		$.get('/api/board/getPlayerList', {
+			'board': board,
+		}).done(function(data) {
+			console.log('Player list result received', data);
+			if (data.success) {
+				printPlayerList(data.players);
+			}
+		}).fail(function(data) {
+			console.error(data);
+		});
+	}
+
+	function printPlayerList(players) {
+		$("#user_table tbody tr").remove();
+
+		if (players === false) return;
+
+		$.each(players, function(key, value) {
+			if (value.life > 0) {
+				life_color = "success";
+				power_color = "primary";
+			} else {
+				life_color = "secondary";
+				power_color = "secondary";
+			}
+
+			if ($("#user_table tbody tr[data-id='"+me_id+"'] td:nth(1) span").html() != "0") {
+				vote_btn = "";
+			} else {
+				if (value.dead_time !== null) {
+					vote_btn = "";
+				} else {
+					vote_btn = "<input type=\"radio\" name=\"voteId\"/>";
+				}
+			}
+
+			$("#user_table tbody").append("\
+			<tr data-id=\""+value.user+"\">\
+			<td scope=\"row\">\
+			<img src=\"https://gficher.com/profile_images/"+value.picture+"\" style=\"width: 20px; border-radius: 100%;\"/> \
+			"+value.username+"</td>\
+			<td><span class=\"text-"+life_color+"\">"+value.life+"</span></td>\
+			<td><span class=\"text-"+power_color+"\">"+value.power+"</span></td>\
+			<td style=\"text-align:center;\">"+vote_btn+"</td>\
+			</tr>");
+
+			if (value.dead_time != null) return;
+
+			value.pos_x = (parseInt(value.pos_x)+1).toString();
+			value.pos_y = (parseInt(value.pos_y)+1).toString();
+
+			$(".bt-board > .bt-row > .bt-col[data-x='"+(value.pos_x-1)+"'][data-y='"+(value.pos_y-1)+"']").append("<div class=\"player\" data-id=\""+value.user+"\" data-name=\""+value.username+"\">\
+			<div class=\"status\">\
+			<div class=\"power\">"+value.power+"</div>\
+			<div class=\"lives\">"+value.life+"</div>\
+			</div>\
+			<div class=\"pic ttip\" style=\"background-image: url(https://gficher.com/profile_images/"+value.picture+");\" title=\""+value.username+"\"></div>\
+			</div>");
+		});
+
+		updateVote();
 	}
 
 	function paintBoard(size) {
@@ -371,6 +447,23 @@ $alphabet[-1] = '';
 				$(".bt-board > .bt-row").last().append("<div class=\"bt-col\" data-x=\""+(j-1)+"\" data-y=\""+(i-1)+"\"></div>");
 			}
 		}
+	}
+
+	function updateVote() {
+		$.get('/api/board/getMyVote', {
+			'board': board,
+			'player': me_id,
+		}).done(function(data) {
+			console.log(data);
+			if (data.success) {
+				if(data.vote !== false) {
+					$("#user_table tbody tr td input[type=radio][name=voteId]").prop('checked', false);
+					$("#user_table tbody tr[data-id='"+data.vote+"'] td input[type=radio][name=voteId]").prop('checked', true);
+				}
+			}
+		}).fail(function(data) {
+			console.log(data);
+		});
 	}
 
 	function login(username, password) {
@@ -481,6 +574,7 @@ $alphabet[-1] = '';
 			});
 			$("#user_table tbody tr[data-id='"+id+"'] td:nth(1) span").removeClass('text-success').addClass('text-secondary');
 			$("#user_table tbody tr[data-id='"+id+"'] td:nth(2) span").removeClass('text-primary').addClass('text-secondary');
+			$("#user_table tbody tr[data-id='"+id+"'] td input[type=radio][name=voteId]").remove();
 		}
 		return;
 	}
@@ -580,11 +674,26 @@ $alphabet[-1] = '';
 								$(".log-box > .entry").remove();
 
 								if (moment(data.start_time).isAfter(moment())) {
-									$(".bt-board").hide()
+									$(".bt-board").hide();
 									$(".board-countdown").show();
 									$(".board-countdown > .countdown").countdown(moment(data.start_time).format("YYYY/MM/DD HH:mm:ss"), function(event) {
 										$(this).text(event.strftime('%D:%H:%M:%S'));
 									});
+									$("#game_board .board-countdown > button").prop('disabled', false).removeClass('btn-success').removeClass('btn-danger').addClass('btn-primary');
+
+									inGame = false;
+									$.each(data.players, function(key, data) {
+										if (data['user'] == me_id) {
+											inGame = true;
+											return;
+										}
+									});
+
+									if (inGame) {
+										$(".board-countdown > button > span").html('Leave game');
+									} else {
+										$(".board-countdown > button > span").html('Join game');
+									}
 								} else if (!data.players) {
 									$.get('/api/board/startGame', {
 										'board': board,
@@ -604,39 +713,7 @@ $alphabet[-1] = '';
 									paintBoard(parseInt(data.size));
 								}
 
-								$("#user_table tbody tr").remove();
-
-								$.each(data.players, function(key, value) {
-									if (value.life > 0) {
-										life_color = "success";
-										power_color = "primary";
-									} else {
-										life_color = "secondary";
-										power_color = "secondary";
-									}
-
-									$("#user_table tbody").append("\
-									<tr data-id=\""+value.user+"\">\
-									<td scope=\"row\">\
-									<img src=\"https://gficher.com/profile_images/"+value.picture+"\" style=\"width: 20px; border-radius: 100%;\"/> \
-									"+value.username+"</td>\
-									<td><span class=\"text-"+life_color+"\">"+value.life+"</span></td>\
-									<td><span class=\"text-"+power_color+"\">"+value.power+"</span></td>\
-									</tr>");
-
-									if (value.dead_time != null) return;
-
-									value.pos_x = (parseInt(value.pos_x)+1).toString();
-									value.pos_y = (parseInt(value.pos_y)+1).toString();
-
-									$(".bt-board > .bt-row > .bt-col[data-x='"+(value.pos_x-1)+"'][data-y='"+(value.pos_y-1)+"']").append("<div class=\"player\" data-id=\""+value.user+"\" data-name=\""+value.username+"\">\
-									<div class=\"status\">\
-									<div class=\"power\">"+value.power+"</div>\
-									<div class=\"lives\">"+value.life+"</div>\
-									</div>\
-									<div class=\"pic ttip\" style=\"background-image: url(https://gficher.com/profile_images/"+value.picture+");\" title=\""+value.username+"\"></div>\
-									</div>");
-								});
+								printPlayerList(data.players);
 
 								$('.ttip').tooltipster({
 									theme: 'tooltipster-borderless',
@@ -806,6 +883,25 @@ $alphabet[-1] = '';
 			});
 		});
 
+		$('#user_table tbody').on("change", 'tr td input[type=radio][name=voteId]', function() {
+			//console.log($(this));
+			//alert($(this).closest('tr').attr('data-id'));
+			$.get('/api/board/vote', {
+				'board': board,
+				'player': me_id,
+				'target': $(this).closest('tr').attr('data-id'),
+			}).done(function(data) {
+				console.log('Vote result received', data);
+				if (data.success) {
+					//
+				} else {
+					$(this).prop('checked', false);
+				}
+			}).fail(function(data) {
+				console.error(data);
+			});
+		});
+
 		$('#board_list table > tbody').on("click", 'tr > td > .see', function() {
 			getBoard($(this).closest('tr').attr('data-id'));
 		});
@@ -818,25 +914,40 @@ $alphabet[-1] = '';
 				$(this).html('<i class="fa fa-fw fa-spinner fa-spin"></i>');
 			}).fadeIn();
 
+			inGame = $("#user_table tbody tr[data-id='"+me_id+"']").length;
 
-			$.get('/api/board/join', {
+			action = inGame ? 'leave' : 'join';
+
+			$.get('/api/board/'+action, {
 				'board': board,
 				'player': me_id,
 			}).done(function(data) {
 				console.log('Join result received', data);
 				if (data.success) {
 					button.find('span').fadeOut(function() {
-						$(this).html('You have joined the game');
+						if (inGame) {
+							$(this).html('You have left the game');
+						} else {
+							$(this).html('You have joined the game');
+						}
 						button.addClass('btn-success').removeClass('btn-primary');
 					}).fadeIn();
 				} else {
 					button.prop('disabled', false);
 					button.find('span').fadeOut(function() {
-						$(this).html('Failed to join');
+						if (inGame) {
+							$(this).html('Failed to leave');
+						} else {
+							$(this).html('Failed to join');
+						}
 						button.addClass('btn-danger').removeClass('btn-primary');
 						setTimeout(function() {
 							button.find('span').fadeOut(function() {
-								$(this).html('Join game');
+								if (inGame) {
+									$(this).html('Leave game');
+								} else {
+									$(this).html('Join game');
+								}
 								button.addClass('btn-primary').removeClass('btn-danger');
 							}).fadeIn();
 						}, 2000);

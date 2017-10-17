@@ -111,8 +111,9 @@ class Player_model extends CI_Model {
 
 		$this->set('life', $this->get('life')-$damage);
 		if ($this->get('life') <= 0) $this->set('dead_time', date('Y-m-d H:i:s'));
-
 		$this->update();
+
+		$query = $this->db->query('DELETE FROM tanks_vote WHERE DATE(vote_time) = CURDATE() AND target = ?', Array($this->get('user')));
 		return 1;
 	}
 
@@ -122,5 +123,21 @@ class Player_model extends CI_Model {
 		$this->set('power', $this->get('power')+$power);
 		$this->update();
 		return 1;
+	}
+
+	public function vote($target) {
+		$query = $this->db->query('DELETE FROM tanks_vote WHERE DATE(vote_time) = CURDATE() AND player = ?', Array($this->get('user')));
+		$query = $this->db->query('INSERT INTO tanks_vote (board, player, target) VALUES (?,?,?)', Array($this->get('board'), $this->get('user'), $target));
+	}
+
+	public function getVote() {
+		$query = $this->db->query('SELECT * FROM tanks_vote WHERE player = ? AND board = ? AND DATE(vote_time) = CURDATE() LIMIT 1', Array($this->get('user'), $this->get('board')));
+
+		if ($query->num_rows() == 1) {
+			$output = $query->row_array();
+			return $output['target'];
+		} else {
+			return false;
+		}
 	}
 }

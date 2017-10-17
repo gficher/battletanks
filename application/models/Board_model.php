@@ -121,12 +121,34 @@ class Board_model extends CI_Model {
 		}
 	}
 
-	public static function dailyEmpower() {
+	public static function daily() {
 		$query = self::$db->query('
 		UPDATE tanks_player p
 		LEFT JOIN tanks_board b ON p.board = b.id
-		SET p.power = p.power+1 WHERE p.dead_time is NULL and b.end_time is NULL
+		SET p.power = p.power+1 WHERE p.dead_time is NULL AND b.end_time is NULL AND start_time < NOW()
 		');
+
+		$winners = Array();
+		$query = self::$db->query('SELECT COUNT(*) as count,board,target,DATE(vote_time) FROM tanks_vote WHERE DATE(vote_time) = DATE_SUB(CURDATE(), INTERVAL 1 DAY) GROUP BY board,target,DATE(vote_time) ORDER BY COUNT(*) DESC');
+		foreach ($query->result_array() as $row) {
+			if (count($winners) == 0) {
+				$return[] = $row;
+				continue;
+			}
+			if ($winners[count($winners)-1]['count'] > $row['count']) break;
+			$winners[] = $row;
+		}
+
+		if (count($winners) >= 1) {
+			$query = self::$db->query('
+			UPDATE tanks_player p
+			LEFT JOIN tanks_board b ON p.board = b.id
+			SET p.power = p.power+1 WHERE p.dead_time is NULL AND b.end_time is NULL AND start_time < NOW() AND p.user = ? AND p.board = ?
+			', Array(
+				$winners[rand(0, count($winners)-1)]['player'],
+				$this->get('board'),
+			));
+		}
 	}
 
 	public static function roundUpToAny($n,$x=3) {
@@ -143,6 +165,24 @@ class Board_model extends CI_Model {
 
 		if (!in_array($id, $players)) {
 			$query = $this->db->query('INSERT INTO tanks_player (user, board) VALUES (?,?)', Array(
+				$id,
+				$this->get('id'),
+			));
+			return true;
+		} else {
+			return false;
+		}
+	}
+	public function leavePlayer($id) {
+		$players = Array();
+		if ($this->getPlayers()) {
+			foreach ($this->getPlayers() as $key => $value) {
+				$players[] = $value['user'];
+			}
+		}
+
+		if (in_array($id, $players)) {
+			$query = $this->db->query('DELETE FROM tanks_player WHERE user = ? AND board = ?', Array(
 				$id,
 				$this->get('id'),
 			));
@@ -187,14 +227,28 @@ class Board_model extends CI_Model {
 	}
 
 	public function isJoiningMode() {
-		// Game in progress
-		if (new DateTime() > new DateTime($this->get('start_date'))) {
-			return 0;
-		}
-		// Too early
-		if (new DateTime() < new DateTime($this->get('join_date'))) {
-			return 0;
-		}
+		if ((new DateTime() < new DateTime($this->get('start_time'))) and (new DateTime() > new DateTime($this->get('join_time'))))
 		return 1;
+		return 0;
+	}
+
+	public function isGamingMode() {
+		if ((new DateTime() > new DateTime($this->get('start_time'))) and (empty($this->get('end_time'))))
+		return 1;
+		return 0;
+	}
+
+	public function isPlannedMode() {
+		if ((new DateTime() < new DateTime($this->get('open_time'))) and (empty($this->get('end_time'))))
+		return 1;
+		return 0;
+	}
+
+	public function isClosedMode() {
+		if (!empty($this->get('end_time')))
+		return 1;
+		if (($this->isGamingMode) and (count($this->getPlayers()) == 0))
+		return 1;
+		return 0;
 	}
 }
