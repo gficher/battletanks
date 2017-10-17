@@ -619,6 +619,14 @@ class Board extends MY_Controller {
 		$this->load->model('Board_model', 'board');
 		$this->load->model('Player_model', 'player');
 
+		if ($this->input->get('player') == 0) {
+			echo json_encode(Array(
+				'success' => false,
+				'message' => 'Auth required.',
+			), JSON_PRETTY_PRINT);
+			return 0;
+		}
+
 		if (!$this->board->setBoard($this->input->get('board'))) {
 			echo json_encode(Array(
 				'success' => false,
@@ -665,6 +673,14 @@ class Board extends MY_Controller {
 	public function leave() {
 		$this->load->model('Board_model', 'board');
 		$this->load->model('Player_model', 'player');
+
+		if ($this->input->get('player') == 0) {
+			echo json_encode(Array(
+				'success' => false,
+				'message' => 'Auth required.',
+			), JSON_PRETTY_PRINT);
+			return 0;
+		}
 
 		if (!$this->board->setBoard($this->input->get('board'))) {
 			echo json_encode(Array(
