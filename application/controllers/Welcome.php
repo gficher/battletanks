@@ -23,6 +23,6 @@ class Welcome extends MY_Controller {
 	}
 
 	public function error404() {
-		echo '404';
+		echo "Page not found - 404\n(The only page you need is http://tanks.gficher.com/)";
 	}
 }
