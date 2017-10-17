@@ -810,7 +810,7 @@ $alphabet[-1] = '';
 			getBoard($(this).closest('tr').attr('data-id'));
 		});
 
-		$('#board_list .board-countdown').on("click", 'button', function() {
+		$('#game_board .board-countdown').on("click", 'button', function() {
 			id = $(this).closest('tr').attr('data-id');
 
 			$.get('/api/board/join', {
