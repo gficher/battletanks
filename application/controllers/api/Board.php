@@ -601,6 +601,7 @@ class Board extends MY_Controller {
 
 		if ($this->board->getPlayers()) {
 			$this->board->startGame();
+			$this->logbook->log($this->board->get('id'), 'start', null, null, null);
 			echo json_encode(Array(
 				'success' => true,
 				'message' => 'Board started!',

@@ -354,6 +354,21 @@ $alphabet[-1] = '';
 			<i class=\"fa fa-fw fa-sign-out\"></i> <b>"+value.player_username+"</b> left the board. <span class=\"time\">"+value.timestamp+"</span>\
 			</div>");
 			break;
+			case "open":
+			$(".log-box").prepend("<div class=\"entry\">\
+			<i class=\"fa fa-fw fa-hourglass\"></i> <b>Open to players!</b> <span class=\"time\">"+value.timestamp+"</span>\
+			</div>");
+			break;
+			case "start":
+			$(".log-box").prepend("<div class=\"entry\">\
+			<i class=\"fa fa-fw fa-hourglass-half\"></i> <b>The game has started!</b> <span class=\"time\">"+value.timestamp+"</span>\
+			</div>");
+			break;
+			case "end":
+			$(".log-box").prepend("<div class=\"entry\">\
+			<i class=\"fa fa-fw fa-houtglrass-end\"></i> <b>"+value.player_username+"</b> won the game! <span class=\"time\">"+value.timestamp+"</span>\
+			</div>");
+			break;
 			default:
 			console.log('Handshake log error', value);
 		}
