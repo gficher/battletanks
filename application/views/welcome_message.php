@@ -119,7 +119,10 @@ $alphabet[-1] = '';
 		<div class="row">
 			<div class="col">
 				<div class="bt-board"></div>
-				<div class="board-countdown">00:00:00:00</div>
+				<div class="board-countdown">
+					<div class="countdown">00:00:00:00</div>
+					<button class="btn-success btn-lg">Join game</button>
+				</div>
 			</div>
 		</div>
 		<div class="row">
@@ -577,8 +580,9 @@ $alphabet[-1] = '';
 								$(".log-box > .entry").remove();
 
 								if (moment(data.start_time).isAfter(moment())) {
-									$(".bt-board").hide();
-									$(".board-countdown").show().countdown(moment(data.start_time).format("YYYY/MM/DD HH:mm:ss"), function(event) {
+									$(".bt-board").hide()
+									$(".board-countdown").show();
+									$(".board-countdown > .countdown").countdown(moment(data.start_time).format("YYYY/MM/DD HH:mm:ss"), function(event) {
 										$(this).text(event.strftime('%D:%H:%M:%S'));
 									});
 								} else if (!data.players) {
@@ -675,7 +679,7 @@ $alphabet[-1] = '';
 								$("#board_list").fadeIn();
 								$(".bt-board > .bt-row").remove();
 								$(".log-box > .entry").remove();
-								$('.board-countdown').html('');
+								$('.board-countdown > .countdown').html('');
 							});
 						});
 					});
@@ -806,10 +810,10 @@ $alphabet[-1] = '';
 			getBoard($(this).closest('tr').attr('data-id'));
 		});
 
-		$('#board_list table > tbody').on("click", 'tr > td > .joina', function() {
+		$('#board_list .board-countdown').on("click", 'button', function() {
 			id = $(this).closest('tr').attr('data-id');
 
-			$.get('/api/board/empower', {
+			$.get('/api/board/join', {
 				'board': id,
 				'player': me_id,
 			}).done(function(data) {
@@ -822,7 +826,7 @@ $alphabet[-1] = '';
 			});
 		});
 
-		$('#game_board').on("finish.countdown", '.board-countdown', function() {
+		$('#game_board').on("finish.countdown", '.board-countdown > .countdown', function() {
 			$.get('/api/board/startGame', {
 				'board': board,
 			}).done(function(data) {

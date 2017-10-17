@@ -198,12 +198,21 @@ body {
 }
 
 .board-countdown {
-    font-size: 100px;
     width: 100%;
-    text-align: center;
     color: #FFF;
     display: none;
     margin-bottom: 60px;
+    text-align: center;
+}
+
+.board-countdown > .countdown {
+    width: 100%;
+    font-size: 100px;
+    text-align: center;
+}
+
+.board-countdown > button {
+    amargin: auto;
 }
 
 .log-box {
