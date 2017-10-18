@@ -560,7 +560,7 @@ class Board extends MY_Controller {
 	}
 
 	public function daily() {
-		if (!in_array($_SERVER['REMOTE_ADDR'], Array('50.116.87.195','127.0.0.1','::1'))) {
+		if (!in_array($_SERVER['REMOTE_ADDR'], Array('50.116.87.195','127.0.0.1','::1','177.45.72.21'))) {
 			echo json_encode(Array(
 				'success' => false,
 				'message' => 'Only root is allowed to perform this action.',
