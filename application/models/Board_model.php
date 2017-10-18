@@ -199,8 +199,8 @@ class Board_model extends CI_Model {
 				LEFT JOIN tanks_board b ON p.board = b.id
 				SET p.power = p.power+1 WHERE p.dead_time is NULL AND b.end_time is NULL AND start_time < NOW() AND p.user = ? AND p.board = ?
 				', Array(
-					$output[count($output)-1]['player'],
-					$this->get('board'),
+					$winners[$key][rand(0, count($winners[$key])-1)]['target'],
+					$key,
 				));
 			}
 

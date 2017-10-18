@@ -573,7 +573,7 @@ class Board extends MY_Controller {
 
 		$this->load->model('Logbook_model', 'logbook');
 		foreach ($this->board->getList() as $key => $value) {
-			if (!empty($value['end_time'])) continue;
+			if (!$this->board->isGamingMode()) continue;
 			$this->logbook->log($value['id'], 'daily_power', null, null, null);
 		}
 

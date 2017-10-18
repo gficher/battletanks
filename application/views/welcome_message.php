@@ -274,6 +274,9 @@ $alphabet[-1] = '';
 							case "leave":
 							updatePlayerList();
 							break;
+							case "vote_power":
+							use_power(value.player, -1);
+							break;
 							default:
 							console.log(value);
 						}
