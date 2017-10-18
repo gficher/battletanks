@@ -60,8 +60,8 @@ switch($_SERVER["HTTP_HOST"]) {
 	define('ENVIRONMENT', 'development');
 	break;
 	case "tanks.gficher.com":
-	//define('ENVIRONMENT', 'development');
-	define('ENVIRONMENT', 'production');
+	define('ENVIRONMENT', 'development');
+	//define('ENVIRONMENT', 'production');
 	break;
 
 	case "cli":
