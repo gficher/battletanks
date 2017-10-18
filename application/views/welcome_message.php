@@ -45,6 +45,7 @@ $alphabet[-1] = '';
 						</div>
 						<input type="submit" style="position: absolute; left: -9999px; width: 1px; height: 1px;" tabindex="-1" />
 					</form>
+					<p>You should use your <a href="https://gficher.com" target="_blank">gficher.com</a> account to log in. If you do not have it create one <a href="https://gficher.com/user/register" target="_blank">here</a>.<br>Plase note that it's very important to have a profile picture!</p>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -192,6 +193,7 @@ $alphabet[-1] = '';
 							$("#accountDropdown .loggedout").css({display: 'none'});
 							$("#accountDropdown .loggedin .dropdown-header").html(data.name+" "+data.surname);
 							updateBoardList();
+							updatePlayerList();
 							setTimeout(function() {
 								$("#loginModal").modal('hide');
 							}, 1000);
@@ -389,6 +391,7 @@ $alphabet[-1] = '';
 
 	function printPlayerList(players) {
 		$("#user_table tbody tr").remove();
+		$(".bt-board > .bt-row > .bt-col > .player").remove();
 
 		if (players === false) return;
 
@@ -492,7 +495,8 @@ $alphabet[-1] = '';
 			console.log(data);
 			if (data.success) {
 				me_id = 0;
-				updateBoardList()
+				updateBoardList();
+				updatePlayerList();
 				repaint();
 				$("#accountDropdown > a.nav-link.dropdown-toggle").html("My Account");
 				$("#accountDropdown .loggedin").css({display: 'none'});
@@ -695,7 +699,7 @@ $alphabet[-1] = '';
 									} else {
 										$(".board-countdown > button").hide();
 									}
-									
+
 									$(".bt-board").hide();
 									$(".board-countdown").show();
 									$(".board-countdown > .countdown").countdown(moment(data.start_time).format("YYYY/MM/DD HH:mm:ss"), function(event) {
