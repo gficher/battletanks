@@ -586,6 +586,7 @@ class Board extends MY_Controller {
 
 	public function startGame() {
 		$this->load->model('Board_model', 'board');
+		$this->load->model('Logbook_model', 'logbook');
 
 		if (!$this->board->setBoard($this->input->get('board'))) {
 			echo json_encode(Array(
