@@ -414,6 +414,10 @@ class Board extends MY_Controller {
 			return 0;
 		}
 
+		if ($this->logbook->getList($this->input->get('board'), 0) === false) {
+			$this->logbook->log($this->input->get('board'), 'open', null, null, null);
+		}
+
 		$last_id = $this->input->get('action');
 		while (1) {
 			$start = microtime(true);

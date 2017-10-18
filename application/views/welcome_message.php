@@ -687,8 +687,15 @@ $alphabet[-1] = '';
 							if (data.success) {
 								board = id;
 								$(".log-box > .entry").remove();
+								if (moment(data.open_time).isAfter(moment())) {
 
-								if (moment(data.start_time).isAfter(moment())) {
+								} else if (moment(data.start_time).isAfter(moment())) {
+									if (me_id != 0) {
+										$(".board-countdown > button").show();
+									} else {
+										$(".board-countdown > button").hide();
+									}
+									
 									$(".bt-board").hide();
 									$(".board-countdown").show();
 									$(".board-countdown > .countdown").countdown(moment(data.start_time).format("YYYY/MM/DD HH:mm:ss"), function(event) {
@@ -792,15 +799,18 @@ $alphabet[-1] = '';
 						value['players'] = 0;
 					}
 
-					if (moment(value['start_time']).isAfter(moment())) {
+					if (moment(value['open_time']).isAfter(moment())) {
+						progress = '<span class=\"text-primary\">Planned</span>';
+						button = "";
+					} else if (moment(value['start_time']).isAfter(moment())) {
 						progress = '<span class=\"text-success\">Open to join</span>';
-						button = "<button type=\"button\" class=\"btn btn-primary btn-xs see\"><i class=\"fa fa-fw fa-eye\"></i> See</button>";
+						button = "<button type=\"button\" class=\"btn btn-primary btn-xs see\"><i class=\"fa fa-fw fa-sign-in\"></i> Join</button>";
 					} else if (value['players'] == 0) {
-						progress = '<span class=\"text-danger\">Game closed</span>';
+						progress = '<span class=\"text-danger\">Cancelled</span>';
 						button = "";
 					} else if (value['end_time'] == null) {
 						progress = '<span class=\"text-warning\">In progress</span>';
-						button = "<button type=\"button\" class=\"btn btn-primary btn-xs see\"><i class=\"fa fa-fw fa-eye\"></i> See</button>";
+						button = "<button type=\"button\" class=\"btn btn-primary btn-xs see\"><i class=\"fa fa-fw fa-eye\"></i> View</button>";
 					} else {
 						progress = '<span class=\"text-danger\">Ended</span>';
 						button = "<button type=\"button\" class=\"btn btn-secondary btn-xs see\"><i class=\"fa fa-fw fa-eye\"></i> See</button>";
