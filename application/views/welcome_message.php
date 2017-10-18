@@ -371,6 +371,11 @@ $alphabet[-1] = '';
 			<i class=\"fa fa-fw fa-houtglrass-end\"></i> <b>"+value.player_username+"</b> won the game! <span class=\"time\">"+value.timestamp+"</span>\
 			</div>");
 			break;
+			case "vote_power":
+			$(".log-box").prepend("<div class=\"entry\">\
+			<i class=\"fa fa-fw fa-plus\"></i> <b>"+value.player_username+"</b> received a power by vote! <span class=\"time\">"+value.timestamp+"</span>\
+			</div>");
+			break;
 			default:
 			console.log('Handshake log error', value);
 		}
