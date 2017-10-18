@@ -104,6 +104,45 @@ class Board_model extends CI_Model {
 		}
 	}
 
+	public function getAlivePlayers() {
+		$return = Array();
+		$board = $this->get('id');
+
+		$query = self::$db->query("
+		SELECT p.*, u.username, u.picture FROM tanks_player p
+		LEFT JOIN users u ON p.user = u.id
+		WHERE board = $board AND dead_time is NULL
+		");
+
+		foreach ($query->result_array() as $row) {
+			$return[] = $row;
+		}
+
+		if (count($return)) {
+			return $return;
+		} else {
+			return false;
+		}
+	}
+
+	public function end() {
+		$query = $this->db->query('SELECT p.*, u.username, u.picture FROM tanks_player p
+		LEFT JOIN users u ON p.user = u.id
+		WHERE board = ? AND dead_time is NULL', Array(
+			$this->get('id'),
+		));
+
+		if ($query->num_rows() == 1) {
+			$winner = $query->row_array()['user'];
+			$query = $this->db->query('UPDATE tanks_board SET end_time = NOW() WHERE board = ?', Array(
+				$this->get('id'),
+			));
+			return $winner;
+		} else {
+			return false;
+		}
+	}
+
 	public static function getList($search = null, $fields = '*', $field_order = 'id', $order = 'asc', $limit = 999999999999, $start = 0) {
 		$return = Array();
 

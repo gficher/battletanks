@@ -262,6 +262,10 @@ class Board extends MY_Controller {
 			$this->logbook->log($this->input->get('board'), 'death', $this->input->get('player'), null, null);
 		}
 
+		if (count($this->board->getAlivePlayers()) == 1) {
+			$this->logbook->log($this->board->get('id'), 'end', $this->board->get('end'), null, null);
+		}
+
 		echo json_encode(Array(
 			'success' => true,
 			'message' => 'Successful attack.',
@@ -606,7 +610,7 @@ class Board extends MY_Controller {
 			return 0;
 		}
 
-		if ($this->board->getPlayers()) {
+		if ($this->board->getPlayers() > 1) {
 			$this->board->startGame();
 			$this->logbook->log($this->board->get('id'), 'start', null, null, null);
 			echo json_encode(Array(
