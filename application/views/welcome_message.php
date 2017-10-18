@@ -993,9 +993,11 @@ $alphabet[-1] = '';
 			}).done(function(data) {
 				console.log('Start result received', data);
 				if (data.success) {
-					getBoard(board);
-				} else {
-					getBoadList();
+					if (data.started) {
+						getBoard(board);
+					} else {
+						getBoadList();
+					}
 				}
 			}).fail(function(data) {
 				console.error(data);

@@ -591,7 +591,8 @@ class Board extends MY_Controller {
 		if (!$this->board->setBoard($this->input->get('board'))) {
 			echo json_encode(Array(
 				'success' => false,
-				'message' => 'Board not found.'
+				'message' => 'Board not found.',
+				'started' => false,
 			));
 			return 0;
 		}
@@ -599,7 +600,8 @@ class Board extends MY_Controller {
 		if (!empty($this->board->get('size'))) {
 			echo json_encode(Array(
 				'success' => false,
-				'message' => 'Board is already started.'
+				'message' => 'Board is already started.',
+				'started' => true,
 			));
 			return 0;
 		}
@@ -610,12 +612,14 @@ class Board extends MY_Controller {
 			echo json_encode(Array(
 				'success' => true,
 				'message' => 'Board started!',
+				'started' => true,
 			));
 			return 1;
 		} else {
 			echo json_encode(Array(
 				'success' => false,
-				'message' => 'Board has no players.'
+				'message' => 'Board has no players.',
+				'started' => false,
 			));
 			return 0;
 		}
