@@ -194,6 +194,7 @@ $alphabet[-1] = '';
 							$("#accountDropdown .loggedin .dropdown-header").html(data.name+" "+data.surname);
 							updateBoardList();
 							updatePlayerList();
+							$(".board-countdown > button").show();
 							setTimeout(function() {
 								$("#loginModal").modal('hide');
 							}, 1000);
@@ -505,6 +506,7 @@ $alphabet[-1] = '';
 				me_id = 0;
 				updateBoardList();
 				updatePlayerList();
+				$(".board-countdown > button").hide();
 				repaint();
 				$("#accountDropdown > a.nav-link.dropdown-toggle").html("My Account");
 				$("#accountDropdown .loggedin").css({display: 'none'});
