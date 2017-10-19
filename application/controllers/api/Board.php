@@ -610,6 +610,15 @@ class Board extends MY_Controller {
 			return 0;
 		}
 
+		if (!$this->board->isGamingMode()) {
+			echo json_encode(Array(
+				'success' => false,
+				'message' => 'Board cannot start yet.',
+				'started' => true,
+			));
+			return 0;
+		}
+
 		if ($this->board->getPlayers() > 1) {
 			$this->board->startGame();
 			$this->logbook->log($this->board->get('id'), 'start', null, null, null);
