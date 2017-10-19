@@ -96,10 +96,10 @@ $alphabet[-1] = '';
 	</div>
 
 	<div class="container" id="board_list" data-board="" style="display:none;">
-		<h1 class="title" style="margin-top: 50px;"><img src="/assets/img/logo.png" alt="BattleTanks" title="BattleTanks"></h1>
+		<h1 class="title" style="margin-top: 50px;"><img class="main-logo" src="/assets/img/logo.png" alt="BattleTanks" title="BattleTanks"></h1>
 		<p style="text-align: center; margin-bottom: 50px; color: #FFF;">You can learn more about the game <a href="https://archive.gficher.com/battletanks.pdf" target="_blank" title="BattleTanks Info">here</a>.</p>
 
-		<table class="table table-striped table-inverse table-responsiv">
+		<table class="table table-striped table-inverse table-responsive">
 			<thead>
 				<tr>
 					<th>#</th>
@@ -119,7 +119,9 @@ $alphabet[-1] = '';
 		<h1 class="title" style="margin-top: 50px;">Game #<span>2</span></h1>
 		<div class="row">
 			<div class="col">
-				<div class="bt-board"></div>
+				<div class="board-wrapper">
+					<div class="bt-board"></div>
+				</div>
 				<div class="board-countdown">
 					<div class="countdown">00:00:00:00</div>
 					<button class="btn btn-primary btn-lg"><span>Join game</span></button>
@@ -127,14 +129,14 @@ $alphabet[-1] = '';
 			</div>
 		</div>
 		<div class="row">
-			<div class="col">
+			<div class="col-lg-6 col-md-12">
 				<h2  class="title">Logbook</h2>
 				<div class="log-box"></div>
 			</div>
-			<div class="col">
+			<div class="col-lg-6 col-md-12">
 				<h2  class="title">Players</h2>
 				<div class="players-box">
-					<table class="table table-striped table-inverse table-sm table-responsiv" id="user_table">
+					<table class="table table-striped table-inverse table-sm table-responsive" id="user_table">
 						<thead>
 							<tr>
 								<th>Name</th>

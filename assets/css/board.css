@@ -19,6 +19,12 @@ body {
     color: #FFF;
 }
 
+.board-wrapper {
+    width: 100%;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
 .bt-board {
     width: 0px;
     height: 0px;
@@ -211,10 +217,6 @@ body {
     text-align: center;
 }
 
-.board-countdown > button {
-    amargin: auto;
-}
-
 .log-box {
     width: 100%;
     margin: auto;
@@ -256,4 +258,26 @@ body {
 #loader {
     height: calc(100% - 60px);
     background: url(/assets/img/loading.gif) center no-repeat;
+}
+
+@media screen and (max-width: 540px) {
+    .main-logo {
+        width: 300px;
+    }
+
+    .board-countdown > .countdown {
+        font-size: 70px;
+    }
+}
+
+@media screen and (max-width: 380px) {
+    .board-countdown > .countdown {
+        font-size: 50px;
+    }
+}
+
+@media screen and (max-width: 320px) {
+    .main-logo {
+        width: 200px;
+    }
 }
