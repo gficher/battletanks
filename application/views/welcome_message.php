@@ -297,7 +297,7 @@ $alphabet[-1] = '';
 			if (e.readyState != EventSource.CLOSED) {
 				//listener.close();
 				//createListener();
-				//$(".log-box").find('.entry').remove();
+				$(".log-box").find('.entry').remove();
 			}
 		}, false);
 	}
