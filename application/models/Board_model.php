@@ -94,6 +94,7 @@ class Board_model extends CI_Model {
 		");
 
 		foreach ($query->result_array() as $row) {
+			$row['picture'] = (empty($row['picture'])) ? 'default-user.png' : $row['picture'];
 			$return[] = $row;
 		}
 

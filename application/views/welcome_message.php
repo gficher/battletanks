@@ -1016,7 +1016,7 @@ $alphabet[-1] = '';
 			});
 		});
 
-		$('.navbar-nav a.auto-close').on('click', function(){
+		$('.navbar-nav a.auto-close').on('click', function() {
 		    $('#topbar .navbar-collapse').collapse('hide');
 		});
 	});
