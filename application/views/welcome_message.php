@@ -55,7 +55,7 @@ $alphabet[-1] = '';
 		</div>
 	</div>
 
-	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark" id="topbar">
 		<a class="navbar-brand" href="#">
 			<img src="/assets/img/topbar_logo.png" width="30" height="30" alt="">
 			BattleTanks
@@ -69,7 +69,7 @@ $alphabet[-1] = '';
 			</span>
 			<ul class="navbar-nav mr-auto">
 				<li class="nav-item">
-					<a class="nav-link" href="javascript:void(0)" onclick="getBoadList()">Board List</a>
+					<a class="nav-link auto-close" href="javascript:void(0)" onclick="getBoadList()">Board List</a>
 				</li>
 			</ul>
 			<ul class="navbar-nav ml-auto">
@@ -79,12 +79,12 @@ $alphabet[-1] = '';
 					</a>
 					<div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
 						<div class="loggedout">
-							<a class="dropdown-item" href="#" data-toggle="modal" data-target="#loginModal">Sign in</a>
+							<a class="dropdown-item auto-close" href="#" data-toggle="modal" data-target="#loginModal">Sign in</a>
 						</div>
 						<div class="loggedin" style="display:none;">
 							<h6 class="dropdown-header"></h6>
-							<a class="dropdown-item" href="//gficher.com/user/account" target="_blank">Edit profile</a>
-							<a class="dropdown-item" href="#" onclick="logout()">Log out</a>
+							<a class="dropdown-item auto-close" href="//gficher.com/user/account" target="_blank">Edit profile</a>
+							<a class="dropdown-item auto-close" href="#" onclick="logout()">Log out</a>
 						</div>
 					</div>
 				</li>
@@ -1014,6 +1014,10 @@ $alphabet[-1] = '';
 			}).fail(function(data) {
 				console.error(data);
 			});
+		});
+
+		$('.navbar-nav a.auto-close').on('click', function(){
+		    $('#topbar .navbar-collapse').collapse('hide');
 		});
 	});
 	</script>
