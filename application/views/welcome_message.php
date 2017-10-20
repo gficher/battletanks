@@ -16,6 +16,18 @@ $alphabet[-1] = '';
 	<link rel="stylesheet" type="text/css" href="<?=base_url()?>assets/css/tooltipster/themes/tooltipster-sideTip-borderless.min.css" />
 	<link rel="stylesheet" type="text/css" href="<?=base_url()?>assets/css/font-awesome.min.css" />
 	<link rel="stylesheet" href="<?=base_url()?>assets/css/board.css">
+
+	<!-- Hotjar Tracking Code for https://tanks.gficher.com -->
+	<script>
+	(function(h,o,t,j,a,r){
+		h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+		h._hjSettings={hjid:662752,hjsv:6};
+		a=o.getElementsByTagName('head')[0];
+		r=o.createElement('script');r.async=1;
+		r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+		a.appendChild(r);
+	})(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+	</script>
 </head>
 <body>
 	<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -1017,7 +1029,7 @@ $alphabet[-1] = '';
 		});
 
 		$('.navbar-nav a.auto-close').on('click', function() {
-		    $('#topbar .navbar-collapse').collapse('hide');
+			$('#topbar .navbar-collapse').collapse('hide');
 		});
 	});
 	</script>
