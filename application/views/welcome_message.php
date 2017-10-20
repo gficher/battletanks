@@ -336,27 +336,27 @@ $alphabet[-1] = '';
 				direction = "?";
 			}
 			$(".log-box").prepend("<div class=\"entry\">\
-			<i class=\"fa fa-fw fa-arrows\"></i> <b>"+value.player_username+"</b> moved <b>"+direction+"</b> <span class=\"time\">"+value.timestamp+"</span>\
+			<i class=\"fa fa-fw fa-arrows\"></i> <b>"+value.player_username+"</b> <span style=\"color: #2859ac;\">moved</span> <b>"+direction+"</b> <span class=\"time\">"+value.timestamp+"</span>\
 			</div>");
 			break;
 			case "buy_life":
 			$(".log-box").prepend("<div class=\"entry\">\
-			<i class=\"fa fa-fw fa-heart\"></i> <b>"+value.player_username+"</b> bought a life <span class=\"time\">"+value.timestamp+"</span>\
+			<i class=\"fa fa-fw fa-heart\"></i> <b>"+value.player_username+"</b> <span style=\"color: #34a835;\">bought a life</span> <span class=\"time\">"+value.timestamp+"</span>\
 			</div>");
 			break;
 			case "attack":
 			$(".log-box").prepend("<div class=\"entry\">\
-			<i class=\"fa fa-fw fa-bomb\"></i> <b>"+value.player_username+"</b> attacked <b>"+value.target_username+"</b> <span class=\"time\">"+value.timestamp+"</span>\
+			<i class=\"fa fa-fw fa-bomb\"></i> <b>"+value.player_username+"</b> <span style=\"color: #ab2b2b;\">attacked</span> <b>"+value.target_username+"</b> <span class=\"time\">"+value.timestamp+"</span>\
 			</div>");
 			break;
 			case "empower":
 			$(".log-box").prepend("<div class=\"entry\">\
-			<i class=\"fa fa-fw fa-power-off\"></i> <b>"+value.player_username+"</b> empowered <b>"+value.target_username+"</b> <span class=\"time\">"+value.timestamp+"</span>\
+			<i class=\"fa fa-fw fa-power-off\"></i> <b>"+value.player_username+"</b> <span style=\"color: #0097b1;\">empowered</span> <b>"+value.target_username+"</b> <span class=\"time\">"+value.timestamp+"</span>\
 			</div>");
 			break;
 			case "death":
 			$(".log-box").prepend("<div class=\"entry\">\
-			<i class=\"fa fa-fw fa-wheelchair\"></i> <b>"+value.player_username+"</b> died gracefully. <span class=\"time\">"+value.timestamp+"</span>\
+			<i class=\"fa fa-fw fa-wheelchair\"></i> <b>"+value.player_username+"</b> <span style=\"color: #818181;\">died gracefully</span>. <span class=\"time\">"+value.timestamp+"</span>\
 			</div>");
 			break;
 			case "daily_power":
@@ -366,12 +366,12 @@ $alphabet[-1] = '';
 			break;
 			case "join":
 			$(".log-box").prepend("<div class=\"entry\">\
-			<i class=\"fa fa-fw fa-sign-in\"></i> <b>"+value.player_username+"</b> joined the board. <span class=\"time\">"+value.timestamp+"</span>\
+			<i class=\"fa fa-fw fa-sign-in\"></i> <b>"+value.player_username+"</b> <span style=\"color: #005b06;\">joined</span> the board. <span class=\"time\">"+value.timestamp+"</span>\
 			</div>");
 			break;
 			case "leave":
 			$(".log-box").prepend("<div class=\"entry\">\
-			<i class=\"fa fa-fw fa-sign-out\"></i> <b>"+value.player_username+"</b> left the board. <span class=\"time\">"+value.timestamp+"</span>\
+			<i class=\"fa fa-fw fa-sign-out\"></i> <b>"+value.player_username+"</b> <span style=\"color: #740000;\">left</span> the board. <span class=\"time\">"+value.timestamp+"</span>\
 			</div>");
 			break;
 			case "open":
