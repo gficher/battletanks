@@ -226,6 +226,7 @@ body {
     height: 300px;
     overflow: auto;
     color: #FFF;
+    -webkit-overflow-scrolling: touch;
 }
 
 .log-box > .entry {
