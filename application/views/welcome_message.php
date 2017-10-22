@@ -356,7 +356,7 @@ $alphabet[-1] = '';
 			break;
 			case "death":
 			$(".log-box").prepend("<div class=\"entry\">\
-			<i class=\"fa fa-fw fa-wheelchair\"></i> <b>"+value.player_username+"</b> <span style=\"color: #818181;\">died gracefully</span>. <span class=\"time\">"+value.timestamp+"</span>\
+			<i class=\"fa fa-fw fa-wheelchair\"></i> <b>"+value.target_username+"</b> <span style=\"color: #818181;\">died gracefully</span>. <span class=\"time\">"+value.timestamp+"</span>\
 			</div>");
 			break;
 			case "daily_power":
