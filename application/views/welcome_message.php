@@ -178,8 +178,6 @@ $alphabet[-1] = '';
 		return "/api/board/getUpdates?board="+board.toString()+"&action="+last_action.toString();
 	}
 
-	window.history.pushState('forward', null, '/');
-
 	$(window).on('popstate', function() {
 		p = location.pathname.split("/");
 		if (p.length > 2 && params[1] == "game") {
@@ -737,7 +735,7 @@ $alphabet[-1] = '';
 						}).done(function(data) {
 							console.log('Board data received', data);
 							if (data.success) {
-								window.history.pushState(id, "BattleTanks", "/game/"+id);
+								window.history.pushState(id, "BattleTanks - Game #"+id, "/game/"+id);
 								board = id;
 								$(".log-box > .entry").remove();
 								if (moment(data.open_time).isAfter(moment())) {
@@ -890,8 +888,25 @@ $alphabet[-1] = '';
 	}
 
 	$(document).ready(function() {
+		var getUrlParameter = function getUrlParameter(sParam) {
+			var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+			sURLVariables = sPageURL.split('&'),
+			sParameterName,
+			i;
+
+			for (i = 0; i < sURLVariables.length; i++) {
+				sParameterName = sURLVariables[i].split('=');
+
+				if (sParameterName[0] === sParam) {
+					return sParameterName[1] === undefined ? true : sParameterName[1];
+				}
+			}
+		};
+
+		init_lang = getUrlParameter('lang') == undefined ? 'pt-br' : getUrlParameter('lang');
+
 		$.get('/api/lang', {
-			'lang': 'pt-br',
+			'lang': init_lang,
 		}).done(function(data) {
 			console.log('Lang info received', data);
 
