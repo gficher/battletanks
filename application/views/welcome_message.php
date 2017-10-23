@@ -34,7 +34,7 @@ $alphabet[-1] = '';
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title">Sign in</h5>
+					<h5 class="modal-title" data-lang-id="menu_login" data-lang-id="menu_login">Sign in</h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
@@ -57,11 +57,11 @@ $alphabet[-1] = '';
 						</div>
 						<input type="submit" style="position: absolute; left: -9999px; width: 1px; height: 1px;" tabindex="-1" />
 					</form>
-					<p>You should use your <a href="https://gficher.com" target="_blank">gficher.com</a> account to log in. If you do not have it create one <a href="https://gficher.com/user/register" target="_blank">here</a>.<br>Plase note that it's very important to have a profile picture!</p>
+					<p data-lang-id="menu_login_msg">You should use your <a href="https://gficher.com" target="_blank">gficher.com</a> account to log in. If you do not have it create one <a href="https://gficher.com/user/register" target="_blank">here</a>.<br>Plase note that it's very important to have a profile picture!</p>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-					<button type="button" class="btn btn-primary form-submit"><span>Sign in</span></button>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal" data-lang-id="menu_close">Close</button>
+					<button type="button" class="btn btn-primary form-submit"><span data-lang-id="menu_login">Sign in</span></button>
 				</div>
 			</div>
 		</div>
@@ -76,27 +76,27 @@ $alphabet[-1] = '';
 			<span class="navbar-toggler-icon"></span>
 		</button>
 		<div class="collapse navbar-collapse" id="navbarText">
-			<span class="navbar-text">
+			<span class="navbar-text" data-lang-id="menu_by_gficher">
 				by <a href="https://gficher.com">gficher</a>
 			</span>
 			<ul class="navbar-nav mr-auto">
 				<li class="nav-item">
-					<a class="nav-link auto-close" href="javascript:void(0)" onclick="getBoadList()">Board List</a>
+					<a class="nav-link auto-close" href="javascript:void(0)" onclick="getBoadList()" data-lang-id="menu_board_list">Board List</a>
 				</li>
 			</ul>
 			<ul class="navbar-nav ml-auto">
 				<li class="nav-item dropdown" id="accountDropdown">
-					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-lang-id="menu_my_account">
 						My Account
 					</a>
 					<div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
 						<div class="loggedout">
-							<a class="dropdown-item auto-close" href="#" data-toggle="modal" data-target="#loginModal">Sign in</a>
+							<a class="dropdown-item auto-close" href="#" data-toggle="modal" data-target="#loginModal" data-lang-id="menu_login">Sign in</a>
 						</div>
 						<div class="loggedin" style="display:none;">
 							<h6 class="dropdown-header"></h6>
-							<a class="dropdown-item auto-close" href="//gficher.com/user/account" target="_blank">Edit profile</a>
-							<a class="dropdown-item auto-close" href="#" onclick="logout()">Log out</a>
+							<a class="dropdown-item auto-close" href="//gficher.com/user/account" target="_blank" data-lang-id="menu_edit_profile">Edit profile</a>
+							<a class="dropdown-item auto-close" href="#" onclick="logout()" data-lang-id="menu_logout">Log out</a>
 						</div>
 					</div>
 				</li>
@@ -109,16 +109,16 @@ $alphabet[-1] = '';
 
 	<div class="container" id="board_list" data-board="" style="display:none;">
 		<h1 class="title" style="margin-top: 50px;"><img class="main-logo" src="/assets/img/logo.png" alt="BattleTanks" title="BattleTanks"></h1>
-		<p style="text-align: center; margin-bottom: 50px; color: #FFF;">You can learn more about the game <a href="https://archive.gficher.com/battletanks.pdf" target="_blank" title="BattleTanks Info">here</a>.</p>
+		<p style="text-align: center; margin-bottom: 50px; color: #FFF;" data-lang-id="boardlist_learn_more">You can learn more about the game <a href="https://archive.gficher.com/battletanks.pdf" target="_blank" title="BattleTanks Info">here</a>.</p>
 
 		<table class="table table-striped table-inverse table-responsive">
 			<thead>
 				<tr>
 					<th>#</th>
-					<th>Open time</th>
-					<th>Start time</th>
-					<th>Status</th>
-					<th>Players</th>
+					<th data-lang-id="boardlist_open_join">Open time</th>
+					<th data-lang-id="boardlist_start_time">Start time</th>
+					<th data-lang-id="boardlist_status">Status</th>
+					<th data-lang-id="boardlist_players">Players</th>
 					<th></th>
 				</tr>
 			</thead>
@@ -128,7 +128,7 @@ $alphabet[-1] = '';
 	</div>
 
 	<div class="container" style="overflow: auto; display:none;" id="game_board">
-		<h1 class="title" style="margin-top: 50px;">Game #<span>2</span></h1>
+		<h1 class="title" style="margin-top: 50px;"><span data-lang-id="board_game">Game</span> #<span class="game_id">2</span></h1>
 		<div class="row">
 			<div class="col">
 				<div class="board-wrapper">
@@ -136,24 +136,24 @@ $alphabet[-1] = '';
 				</div>
 				<div class="board-countdown">
 					<div class="countdown">00:00:00:00</div>
-					<button class="btn btn-primary btn-lg"><span>Join game</span></button>
+					<button class="btn btn-primary btn-lg"><span data-lang-id="board_join">Join game</span></button>
 				</div>
 			</div>
 		</div>
 		<div class="row">
 			<div class="col-lg-6 col-md-12">
-				<h2  class="title">Logbook</h2>
+				<h2  class="title" data-lang-id="board_logbook">Logbook</h2>
 				<div class="log-box"></div>
 			</div>
 			<div class="col-lg-6 col-md-12">
-				<h2  class="title">Players</h2>
+				<h2  class="title" data-lang-id="board_players">Players</h2>
 				<div class="players-box">
 					<table class="table table-striped table-inverse table-sm table-responsive" id="user_table">
 						<thead>
 							<tr>
-								<th>Name</th>
-								<th>Life</th>
-								<th>Power</th>
+								<th data-lang-id="board_name">Name</th>
+								<th data-lang-id="board_life">Life</th>
+								<th data-lang-id="board_power">Power</th>
 								<th width="1"><i class="fa fa-fw fa-handshake-o" title="Vote for player"></i></th>
 							</tr>
 						</thead>
@@ -172,10 +172,24 @@ $alphabet[-1] = '';
 	<script type="text/javascript" src="<?=base_url()?>assets/js/moment.js"></script>
 	<script type="text/javascript" src="<?=base_url()?>assets/js/jquery.countdown.min.js"></script>
 	<script>
-	var me_id = 0, board = 0, last_action = 0, listener;
+	var me_id = 0, board = 0, last_action = 0, listener, lang;
+	var params = location.pathname.split("/");
 	var updateURL = function() {
 		return "/api/board/getUpdates?board="+board.toString()+"&action="+last_action.toString();
 	}
+
+	window.history.pushState('forward', null, '/');
+
+	$(window).on('popstate', function() {
+		p = location.pathname.split("/");
+		if (p.length > 2 && params[1] == "game") {
+			getBoard(p[2]);
+		} else {
+			updateBoardList(function() {
+				getBoadList();
+			});
+		}
+	});
 
 	$("#loginForm").submit(function() {
 		username = $(this).find('input[type="text"]').val();
@@ -220,7 +234,7 @@ $alphabet[-1] = '';
 							button.removeClass('btn-primary').addClass('btn-danger').find("span").html('<i class="fa fa-fw fa-times"></i>').fadeIn(200, function() {
 								setTimeout(function() {
 									button.find("span").fadeOut(200, function() {
-										button.removeClass('btn-danger').addClass('btn-primary').attr("disabled", null).find("span").html('Sign in').fadeIn(200);
+										button.removeClass('btn-danger').addClass('btn-primary').attr("disabled", null).find("span").html(lang['menu_login']).fadeIn(200);
 										inputs.prop("disabled", null);
 									});
 								}, 2000);
@@ -229,6 +243,16 @@ $alphabet[-1] = '';
 					}
 				}).fail(function(data) {
 					console.log(data);
+					button.find("span").fadeOut(200, function() {
+						button.removeClass('btn-primary').addClass('btn-danger').find("span").html('<i class="fa fa-fw fa-server"></i>').fadeIn(200, function() {
+							setTimeout(function() {
+								button.find("span").fadeOut(200, function() {
+									button.removeClass('btn-danger').addClass('btn-primary').attr("disabled", null).find("span").html(lang['menu_login']).fadeIn(200);
+									inputs.prop("disabled", null);
+								});
+							}, 2000);
+						});
+					});
 				});
 			});
 		});
@@ -321,77 +345,77 @@ $alphabet[-1] = '';
 			case "move":
 			switch (value.direction) {
 				case "u":
-				direction = "up";
+				direction = lang['logbook_up'];
 				break;
 				case "d":
-				direction = "down";
+				direction = lang['logbook_down'];
 				break;
 				case "l":
-				direction = "left";
+				direction = lang['logbook_left'];
 				break;
 				case "r":
-				direction = "right";
+				direction = lang['logbook_right'];
 				break;
 				default:
 				direction = "?";
 			}
 			$(".log-box").prepend("<div class=\"entry\">\
-			<i class=\"fa fa-fw fa-arrows\"></i> <b>"+value.player_username+"</b> <span style=\"color: #2859ac;\">moved</span> <b>"+direction+"</b> <span class=\"time\">"+value.timestamp+"</span>\
+			<i class=\"fa fa-fw fa-arrows\"></i> <b>"+value.player_username+"</b> <span style=\"color: #2859ac;\">"+lang['logbook_moved']+"</span> <b>"+direction+"</b> <span class=\"time\">"+value.timestamp+"</span>\
 			</div>");
 			break;
 			case "buy_life":
 			$(".log-box").prepend("<div class=\"entry\">\
-			<i class=\"fa fa-fw fa-heart\"></i> <b>"+value.player_username+"</b> <span style=\"color: #34a835;\">bought a life</span> <span class=\"time\">"+value.timestamp+"</span>\
+			<i class=\"fa fa-fw fa-heart\"></i> <b>"+value.player_username+"</b> <span style=\"color: #34a835;\">"+lang['logbook_bought_life']+"</span> <span class=\"time\">"+value.timestamp+"</span>\
 			</div>");
 			break;
 			case "attack":
 			$(".log-box").prepend("<div class=\"entry\">\
-			<i class=\"fa fa-fw fa-bomb\"></i> <b>"+value.player_username+"</b> <span style=\"color: #ab2b2b;\">attacked</span> <b>"+value.target_username+"</b> <span class=\"time\">"+value.timestamp+"</span>\
+			<i class=\"fa fa-fw fa-bomb\"></i> <b>"+value.player_username+"</b> <span style=\"color: #ab2b2b;\">"+lang['logbook_attacked']+"</span> <b>"+value.target_username+"</b> <span class=\"time\">"+value.timestamp+"</span>\
 			</div>");
 			break;
 			case "empower":
 			$(".log-box").prepend("<div class=\"entry\">\
-			<i class=\"fa fa-fw fa-power-off\"></i> <b>"+value.player_username+"</b> <span style=\"color: #0097b1;\">empowered</span> <b>"+value.target_username+"</b> <span class=\"time\">"+value.timestamp+"</span>\
+			<i class=\"fa fa-fw fa-power-off\"></i> <b>"+value.player_username+"</b> <span style=\"color: #0097b1;\">"+lang['logbook_empowered']+"</span> <b>"+value.target_username+"</b> <span class=\"time\">"+value.timestamp+"</span>\
 			</div>");
 			break;
 			case "death":
 			$(".log-box").prepend("<div class=\"entry\">\
-			<i class=\"fa fa-fw fa-wheelchair\"></i> <b>"+value.player_username+"</b> <span style=\"color: #818181;\">died</span> gracefully. <span class=\"time\">"+value.timestamp+"</span>\
+			<i class=\"fa fa-fw fa-wheelchair\"></i> <b>"+value.player_username+"</b> <span style=\"color: #818181;\">"+lang['logbook_died']+"</span>. <span class=\"time\">"+value.timestamp+"</span>\
 			</div>");
 			break;
 			case "daily_power":
 			$(".log-box").prepend("<div class=\"entry\">\
-			<i class=\"fa fa-fw fa-plus\"></i> <b>Daily power!</b> <span class=\"time\">"+value.timestamp+"</span>\
+			<i class=\"fa fa-fw fa-plus\"></i> <b>"+lang['logbook_daily_power']+"</b> <span class=\"time\">"+value.timestamp+"</span>\
 			</div>");
 			break;
 			case "join":
 			$(".log-box").prepend("<div class=\"entry\">\
-			<i class=\"fa fa-fw fa-sign-in\"></i> <b>"+value.player_username+"</b> <span style=\"color: #005b06;\">joined</span> the board. <span class=\"time\">"+value.timestamp+"</span>\
+			<i class=\"fa fa-fw fa-sign-in\"></i> <b>"+value.player_username+"</b> <span style=\"color: #005b06;\">"+lang['logbook_joined_game']+"</span> "+lang['logbook_the_board']+". <span class=\"time\">"+value.timestamp+"</span>\
 			</div>");
 			break;
 			case "leave":
 			$(".log-box").prepend("<div class=\"entry\">\
-			<i class=\"fa fa-fw fa-sign-out\"></i> <b>"+value.player_username+"</b> <span style=\"color: #740000;\">left</span> the board. <span class=\"time\">"+value.timestamp+"</span>\
+			<i class=\"fa fa-fw fa-sign-out\"></i> <b>"+value.player_username+"</b> <span style=\"color: #740000;\">"+lang['logbook_left_game']+"</span> "+lang['logbook_the_board']+". <span class=\"time\">"+value.timestamp+"</span>\
 			</div>");
 			break;
 			case "open":
 			$(".log-box").prepend("<div class=\"entry\">\
-			<i class=\"fa fa-fw fa-hourglass\"></i> <b>Open to players!</b> <span class=\"time\">"+value.timestamp+"</span>\
+			<i class=\"fa fa-fw fa-hourglass\"></i> <b>"+lang['logbook_open_players']+"</b> <span class=\"time\">"+value.timestamp+"</span>\
 			</div>");
 			break;
 			case "start":
 			$(".log-box").prepend("<div class=\"entry\">\
-			<i class=\"fa fa-fw fa-hourglass-half\"></i> <b>The game has started!</b> <span class=\"time\">"+value.timestamp+"</span>\
+			<i class=\"fa fa-fw fa-hourglass-half\"></i> <b>"+lang['logbook_started']+"</b> <span class=\"time\">"+value.timestamp+"</span>\
 			</div>");
 			break;
 			case "end":
 			$(".log-box").prepend("<div class=\"entry\">\
-			<i class=\"fa fa-fw fa-houtglrass-end\"></i> <b>"+value.player_username+"</b> won the game! <span class=\"time\">"+value.timestamp+"</span>\
+			<i class=\"fa fa-fw fa-houtglrass-end\"></i> <b>"+value.player_username+"</b> "+lang['logbook_won']+" <span class=\"time\">"+value.timestamp+"</span>\
 			</div>");
 			break;
 			case "vote_power":
 			$(".log-box").prepend("<div class=\"entry\">\
-			<i class=\"fa fa-fw fa-plus\"></i> <b>"+value.player_username+"</b> received a power by vote! <span class=\"time\">"+value.timestamp+"</span>\
+			<i class=\"fa fa-fw fa-plus\"></i> <b>"+value.player_username+"</b> "+lang['logbook_vote_power']+" <span class=\"time\">"+value.timestamp+"</span>\
 			</div>");
 			break;
 			default:
@@ -461,7 +485,7 @@ $alphabet[-1] = '';
 			</div>");
 		});
 
-		updateVote();
+		if ($("#user_table tbody tr[data-id="+me_id+"]").length && $("#user_table tbody tr[data-id="+me_id+"] td .text-success").html() == "0") updateVote();
 	}
 
 	function paintBoard(size) {
@@ -713,6 +737,7 @@ $alphabet[-1] = '';
 						}).done(function(data) {
 							console.log('Board data received', data);
 							if (data.success) {
+								window.history.pushState(id, "BattleTanks", "/game/"+id);
 								board = id;
 								$(".log-box > .entry").remove();
 								if (moment(data.open_time).isAfter(moment())) {
@@ -740,9 +765,9 @@ $alphabet[-1] = '';
 									});
 
 									if (inGame) {
-										$(".board-countdown > button > span").html('Leave game');
+										$(".board-countdown > button > span").html(lang['board_leave']);
 									} else {
-										$(".board-countdown > button > span").html('Join game');
+										$(".board-countdown > button > span").html(lang['board_join']);
 									}
 								} else if (!data.players) {
 									$.get('/api/board/startGame', {
@@ -774,7 +799,7 @@ $alphabet[-1] = '';
 									repaint();
 								}
 								$("#game_board").attr('data-board', board);
-								$("#game_board > .title > span").html(board);
+								$("#game_board > .title > span.game_id").html(board);
 								createListener();
 
 								$("#loader").fadeOut(function() {
@@ -797,6 +822,7 @@ $alphabet[-1] = '';
 		if (listener != undefined) listener.close();
 		last_action = 0;
 		board = 0;
+		window.history.pushState(0, "BattleTanks", "/");
 		$(":animated").promise().done(function() {
 			$("#game_board").fadeOut(function() {
 				$("#board_list").fadeOut(function() {
@@ -828,20 +854,20 @@ $alphabet[-1] = '';
 					}
 
 					if (moment(value['open_time']).isAfter(moment())) {
-						progress = '<span class=\"text-primary\">Planned</span>';
+						progress = '<span class=\"text-primary\">'+lang['boardlist_planned']+'</span>';
 						button = "";
 					} else if (moment(value['start_time']).isAfter(moment())) {
-						progress = '<span class=\"text-success\">Open to join</span>';
-						button = "<button type=\"button\" class=\"btn btn-primary btn-xs see\"><i class=\"fa fa-fw fa-sign-in\"></i> Join</button>";
+						progress = '<span class=\"text-success\">'+lang['boardlist_open_join']+'</span>';
+						button = "<button type=\"button\" class=\"btn btn-primary btn-xs see\"><i class=\"fa fa-fw fa-sign-in\"></i> "+lang['boardlist_join']+"</button>";
 					} else if (value['players'] == 0) {
-						progress = '<span class=\"text-danger\">Cancelled</span>';
+						progress = '<span class=\"text-danger\">'+lang['boardlist_cancelled']+'</span>';
 						button = "";
 					} else if (value['end_time'] == null) {
-						progress = '<span class=\"text-warning\">In progress</span>';
-						button = "<button type=\"button\" class=\"btn btn-primary btn-xs see\"><i class=\"fa fa-fw fa-eye\"></i> View</button>";
+						progress = '<span class=\"text-warning\">'+lang['boardlist_in_progress']+'</span>';
+						button = "<button type=\"button\" class=\"btn btn-primary btn-xs see\"><i class=\"fa fa-fw fa-eye\"></i> "+lang['boardlist_view']+"</button>";
 					} else {
-						progress = '<span class=\"text-danger\">Ended</span>';
-						button = "<button type=\"button\" class=\"btn btn-secondary btn-xs see\"><i class=\"fa fa-fw fa-eye\"></i> See</button>";
+						progress = '<span class=\"text-danger\">'+lang['boardlist_ended']+'</span>';
+						button = "<button type=\"button\" class=\"btn btn-secondary btn-xs see\"><i class=\"fa fa-fw fa-eye\"></i> "+lang['boardlist_see']+"</button>";
 					}
 
 					$("#board_list table tbody").prepend("\
@@ -864,21 +890,40 @@ $alphabet[-1] = '';
 	}
 
 	$(document).ready(function() {
-		$.post('/api/user/getAUth').done(function(data) {
-			console.log('Auth info received', data);
-			if (data.success) {
-				me_id = data.user;
-				$("#accountDropdown > a.nav-link.dropdown-toggle").html("<img src=\"https://gficher.com/profile_images/"+data.picture+"\" style=\"width: 20px; border-radius: 100%; margin-top: -3px;\"> "+data.username+"");
-				$("#accountDropdown .loggedin").css({display: 'block'});
-				$("#accountDropdown .loggedout").css({display: 'none'});
-				$("#accountDropdown .loggedin .dropdown-header").html(data.name+" "+data.surname);
+		$.get('/api/lang', {
+			'lang': 'pt-br',
+		}).done(function(data) {
+			console.log('Lang info received', data);
+
+			lang = data.lang;
+
+			// Set lang
+			$.each($("[data-lang-id]"), function(key, value) {
+				$(this).html(lang[$(this).attr('data-lang-id')]);
+			});
+
+			$.post('/api/user/getAUth').done(function(data) {
+				console.log('Auth info received', data);
+				if (data.success) {
+					me_id = data.user;
+					$("#accountDropdown > a.nav-link.dropdown-toggle").html("<img src=\"https://gficher.com/profile_images/"+data.picture+"\" style=\"width: 20px; border-radius: 100%; margin-top: -3px;\"> "+data.username+"");
+					$("#accountDropdown .loggedin").css({display: 'block'});
+					$("#accountDropdown .loggedout").css({display: 'none'});
+					$("#accountDropdown .loggedin .dropdown-header").html(data.name+" "+data.surname);
+				}
+			}).fail(function(data) {
+				console.error(data);
+			});
+
+			if (params.length > 2 && params[1] == "game") {
+				getBoard(params[2]);
+			} else {
+				updateBoardList(function() {
+					getBoadList();
+				});
 			}
 		}).fail(function(data) {
-			console.error(data);
-		});
-
-		updateBoardList(function() {
-			getBoadList();
+			location.reload();
 		});
 
 		$('body').on("click", '.bt-board > .bt-row > .bt-col > .move-arrow', function() {
@@ -979,9 +1024,9 @@ $alphabet[-1] = '';
 				if (data.success) {
 					button.find('span').fadeOut(function() {
 						if (inGame) {
-							$(this).html('You have left the game');
+							$(this).html(lang['board_left']);
 						} else {
-							$(this).html('You have joined the game');
+							$(this).html(lang['board_joined']);
 						}
 						button.addClass('btn-success').removeClass('btn-primary');
 					}).fadeIn();
@@ -989,17 +1034,17 @@ $alphabet[-1] = '';
 					button.prop('disabled', false);
 					button.find('span').fadeOut(function() {
 						if (inGame) {
-							$(this).html('Failed to leave');
+							$(this).html(lang['board_failed_leave']);
 						} else {
-							$(this).html('Failed to join');
+							$(this).html(lang['board_failed_join']);
 						}
 						button.addClass('btn-danger').removeClass('btn-primary');
 						setTimeout(function() {
 							button.find('span').fadeOut(function() {
 								if (inGame) {
-									$(this).html('Leave game');
+									$(this).html(lang['board_leave']);
 								} else {
-									$(this).html('Join game');
+									$(this).html(lang['board_join']);
 								}
 								button.addClass('btn-primary').removeClass('btn-danger');
 							}).fadeIn();

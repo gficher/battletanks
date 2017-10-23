@@ -54,6 +54,4 @@ $route['default_controller'] = 'welcome';
 $route['404_override'] = 'welcome/error404';
 $route['translate_uri_dashes'] = FALSE;
 
-// Support for old Sorgen API
-$route['api/licenses.php'] = 'api/licenses';
-$route['api/update.php'] = 'api/update';
+$route['game/(:num)'] = 'welcome';
